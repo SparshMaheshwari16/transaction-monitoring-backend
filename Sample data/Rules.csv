@@ -1,0 +1,21 @@
+id,name,description,condition,flag_level,risk_increment,is_active,created_at
+34f79051-b7d2-4c87-a2bc-0d86c4c2bcca,High Value Young User,Rule to detect high value young user,t.trans_amt > 500000 AND t.age < 25,High,6.35,TRUE,2025-06-18 12:29:55.388598
+eae3f772-27e7-41f2-8c21-2e12564b856a,Cross Border Transaction,Rule to detect cross border transaction,t.cross_border = TRUE AND t.trans_amt > 100000,High,14.65,TRUE,2025-06-18 12:29:55.388638
+afa78d8b-94d0-4534-9c99-5589986e6ff6,PEP Transaction,Rule to detect pep transaction,t.pep_status = TRUE AND t.trans_amt > 10000,Low,3.01,TRUE,2025-06-18 12:29:55.388667
+0cf858f6-22a7-4032-ac18-13588285ed3d,High Risk Origination,Rule to detect high risk origination,"t.origination IN ('SWIFT', 'Crypto Wallet') AND t.trans_amt > 100000",Low,17.87,TRUE,2025-06-18 12:29:55.388705
+c4768469-c45e-4192-9877-6093a85f814a,High Frequency Transactions,Rule to detect high frequency transactions,uts.trans_count_15d > 50 AND uts.sum_15d > 200000,Medium,10.85,TRUE,2025-06-18 12:29:55.388720
+cd31f58f-fb4c-4704-bdb4-04fe127cddab,Low Balance High Transfer,Rule to detect low balance high transfer,t.balance < 1000 AND t.trans_amt > 100000,High,1.9,TRUE,2025-06-18 12:29:55.388735
+ce794d0d-29a9-4f02-ac1e-d7ba4a5d9bb6,Unusual Age Bracket,Rule to detect unusual age bracket,t.age < 18 OR t.age > 80 AND t.trans_amt > 50000,Medium,19.32,TRUE,2025-06-18 12:29:55.388749
+dd5b4101-e579-481b-b695-3773be7c333b,Frequent New Transactions,Rule to detect frequent new transactions,t.new_trans = TRUE AND uts.trans_count_15d > 20,High,12.9,TRUE,2025-06-18 12:29:55.388766
+e03ff2d5-1c19-4516-92c1-66a76a7f0299,High Risk Country,Rule to detect high risk country,"t.nationality IN ('Iran', 'North Korea') AND t.trans_amt > 5000",Low,17.58,TRUE,2025-06-18 12:29:55.388779
+6eafc538-c754-41b0-9653-b1217a9a393c,Large Amount from ATM,Rule to detect large amount from atm,t.origination = 'ATM' AND t.trans_amt > 250000,Low,11.67,TRUE,2025-06-18 12:29:55.388792
+d867d315-6312-4952-b2e3-787a0ea56a11,Crypto Wallet High Amount,Rule to detect crypto wallet high amount,t.origination = 'Crypto Wallet' AND t.trans_amt > 150000,High,15.56,TRUE,2025-06-18 12:29:55.388803
+2d29b7e6-70f5-4218-9fe6-6b2ea4100800,SWIFT Large Transfer,Rule to detect swift large transfer,t.origination = 'SWIFT' AND t.trans_amt > 300000,Medium,16.02,TRUE,2025-06-18 12:29:55.388816
+a38a0399-14e0-4a27-85d4-625eb6d1bd2b,Night Transactions,Rule to detect night transactions,EXTRACT(HOUR FROM t.transaction_time) BETWEEN 0 AND 4 AND t.trans_amt > 10000,Low,17.9,TRUE,2025-06-18 12:29:55.388828
+498e5d63-44ac-4c0c-a343-f5581c98ce6b,Senior Citizen Large Transfer,Rule to detect senior citizen large transfer,t.age > 65 AND t.trans_amt > 200000,Medium,9.8,TRUE,2025-06-18 12:29:55.388841
+f20bf207-d774-4045-b4c5-3b97eb839221,High Risk Sex and Age,Rule to detect high risk sex and age,t.sex = 'Other' AND t.age < 30 AND t.trans_amt > 100000,High,10.79,TRUE,2025-06-18 12:29:55.388852
+c5b595d3-06b0-4fdd-b6e4-4a2178986dec,International Large Transfers,Rule to detect international large transfers,t.origination = 'International' AND t.trans_amt > 200000,Medium,3.52,TRUE,2025-06-18 12:29:55.388864
+57faf460-59ff-47e3-87fc-01ca73536c88,Mobile Origination Alert,Rule to detect mobile origination alert,t.origination = 'Mobile' AND t.trans_amt > 75000,High,12.14,TRUE,2025-06-18 12:29:55.388876
+2b6ea580-ef41-49f7-aa0a-4d3dbca6cafb,POS High Spending,Rule to detect pos high spending,t.origination = 'POS' AND t.trans_amt > 90000,Low,19.21,TRUE,2025-06-18 12:29:55.388888
+16395ea8-ef86-4e1c-9c39-eb9c8e809c74,Multiple Transactions Short Time,Rule to detect multiple transactions short time,uts.trans_count_15d > 100,Low,1.49,TRUE,2025-06-18 12:29:55.388900
+5b121ff8-a69e-450f-81d8-cae48a548431,Frequent Cross Border,Rule to detect frequent cross border,t.cross_border = TRUE AND uts.trans_count_30d > 20,Low,3.23,TRUE,2025-06-18 12:29:55.388921
