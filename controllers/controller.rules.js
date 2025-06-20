@@ -1,31 +1,145 @@
 const pool = require('../db'); // Adjust the path to your db connection
+const ruleService = require('../services/service.rule');
+const ApiError = require('../utils/util.ApiError');
 
 exports.getAllRules = async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM rules');
 
-        res.status(200).json(result.rows);
+    const rules = await ruleService.getAllRules()
 
-        // res.send('Fetched rules successfully');
-    } catch (err) {
-        console.error('PostgreSQL query error:', err.message);
-        res.status(500).json({ error: 'Failed to fetch rules' });
+    if (!rules || rules.length === 0) {
+        throw new ApiError(404, 'No rules found');
     }
+    res.status(200).json({
+        success: true,
+        message: 'Fetched all rules successfully',
+        data: rules
+    });
+
+    // res.send('Fetched rules successfully');
+
+    // console.error('PostgreSQL query error:', err.message);
+    // res.status(500).json({ error: 'Failed to fetch rules' });
+
 };
 exports.getARule = async (req, res) => {
     const ruleId = req.params.id;
-    try {
-        const result = await pool.query('SELECT * FROM rules WHERE id = $1', [ruleId]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Rule not found' });
-        }
-
-        res.status(200).json(result.rows[0]);
-
-        // res.send('Fetched rules successfully');
-    } catch (err) {
-        console.error('PostgreSQL query error:', err.message);
-        res.status(500).json({ error: 'Failed to fetch rule by rule' });
+    if (!ruleId) {
+        throw new ApiError(400, 'Rule ID is required');
     }
+
+    const result = await ruleService.getRuleById(ruleId);
+    if (!result) {
+        return res.status(404).json({ error: 'Rule not found' });
+    }
+
+
+    res.status(200).json({
+        success: true,
+        message: 'Fetched a rule by id successfully',
+        data: result
+    });
+
+
 };
+
+exports.createRule = async (req, res) => {
+    if (!req.body || Object.keys(req.body).length === 0) {
+        // return res.status(400).json({ error: 'Request body is required' });
+        throw new ApiError(400, 'Request body is required');
+    }
+    const { name, condition, flag_level, risk_increment } = req.body;
+    // console.log('Received data:', req.body);
+    if (!name || !condition || !flag_level || !risk_increment) {
+        throw new ApiError(400, 'Missing required fields');
+    }
+
+
+    const result = await ruleService.createRule(name, condition, flag_level, risk_increment);
+    if (!result) {
+        throw new ApiError(500, 'Failed to create rule');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Rule created successfully',
+        data: result
+    });
+
+
+    // console.error('PostgreSQL query error:', err.message);
+    // res.status(500).json({ error: 'Failed to create rule' });
+
+};
+
+exports.deleteRule = async (req, res) => {
+    const ruleId = req.params.id;
+
+    if (!ruleId) {
+        throw new ApiError(400, 'Rule ID is required');
+    }
+
+    const result = await ruleService.deleteRule(ruleId);
+    if (!result) {
+        throw new ApiError(404, 'Rule not found');
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'Rule deleted successfully',
+        data: result
+    });
+};
+
+exports.updateRule = async (req, res) => {
+    const ruleId = req.params.id;
+    if (!ruleId) {
+        throw new ApiError(400, 'Rule ID is required');
+    }
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ApiError(400, 'Request body is required');
+    }
+    const { name, condition, flag_level, risk_increment } = req.body;
+
+    if (!name || !condition || !flag_level || !risk_increment) {
+        throw new ApiError(400, 'Missing required fields');
+    }
+
+    const result = await ruleService.updateRule(ruleId, name, condition, flag_level, risk_increment);
+
+
+    if (!result) {
+        throw new ApiError(404, 'Rule not found');
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'Rule updated successfully',
+        data: result
+    });
+
+    // console.error('PostgreSQL query error:', err.message);
+    // res.status(500).json({ error: 'Failed to update rule' });
+
+};
+
+exports.toggleActiveRule = async (req, res) => {
+    const ruleId = req.params.id;
+
+    if (!ruleId) {
+        throw new ApiError(400, 'Rule ID is required');
+    }
+    const result = await ruleService.toggleActiveRule(ruleId);
+    if (!result) {
+        throw new ApiError(404, 'Rule not found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Rule active status toggled successfully',
+        data: result
+    });
+
+    // console.error('PostgreSQL query error:', err.message);
+    // res.status(500).json({ error: 'Failed to toggle rule active status' });
+
+};
+
+
