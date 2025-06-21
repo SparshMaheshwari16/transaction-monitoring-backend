@@ -16,25 +16,29 @@ const rulesRoutes = require('./routes/route.rules.js');
 const userRoutes = require('./routes/route.user.js');
 const evaluateRulesRoutes = require('./routes/route.evaluateRules.js');
 
+const ipWhitelist = require('./middlewares/middleware.ipWhiteList.js');
+const authenticateApiKey = require('./middlewares/middleware.auth.js');
+
 const evaluateRules = require('./services/ruleEvaluator.js');
 
 // /transactions
-app.use('/api/transactions', transactionRoutes);
+app.use('/api/transactions', ipWhitelist, authenticateApiKey, transactionRoutes);
+
 // /rules
-app.use('/api/rules', rulesRoutes);
+app.use('/api/rules', ipWhitelist, authenticateApiKey, rulesRoutes);
 
 // /users
-app.use('/api/users', userRoutes);
+app.use('/api/users', ipWhitelist, authenticateApiKey, userRoutes);
 
 // /evaluate
-app.use('/api/evaluateRule', evaluateRulesRoutes);
+app.use('/api/evaluateRule', ipWhitelist, authenticateApiKey, evaluateRulesRoutes);
 
 app.use((err, req, res, next) => {
     // console.error(err.stack);
     // if (err.message === 'Invalid JSON') {
     //     return res.status(400).json({ error: 'Invalid JSON payload' });
     // }
-    
+
     // console.log(err);
     console.error(`Error occurred on ${req.method} ${req.originalUrl}`);
     if (err.originalError) {
