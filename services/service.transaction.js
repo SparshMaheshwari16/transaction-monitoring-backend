@@ -5,7 +5,7 @@ module.exports.getAllTransactions = async () => {
     return result.rows;
 };
 
-module.exports.getATransactions = async (id) => {
+module.exports.getTransactionById = async (id) => {
     const result = await pool.query('SELECT * FROM transactions WHERE id=$1', [id]);
-    return result.rows;
+    return result.rows[0];
 };

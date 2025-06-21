@@ -25,7 +25,7 @@ exports.getATransaction = async (req, res) => {
     if (!transactionId) {
         throw new ApiError(400, 'Transaction ID is required');
     }
-    const result = await transactionService.getATransactions(transactionId);
+    const result = await transactionService.getTransactionById(transactionId);
     if (!result || result.length === 0) {
         return res.status(404).json({ error: 'Transaction not found' });
     }
