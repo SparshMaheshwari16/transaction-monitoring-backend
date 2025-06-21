@@ -4,15 +4,15 @@ const router = express.Router();
 const rulesController = require('../controllers/controller.rules');
 const asyncHandler = require('../utils/util.asyncHandler');
 // GET /api/rules
-router.get('/getAll', asyncHandler(rulesController.getAllRules));
-router.get('/getOne/:id', asyncHandler(rulesController.getRuleById));
-router.get('/getMul', asyncHandler(rulesController.getRulesByIds));
+router.get('/', asyncHandler(rulesController.getAllRules));
+router.get('/:id', asyncHandler(rulesController.getRuleById));
 // POST /api/rules
-router.post('/create', asyncHandler(rulesController.createRule));
+router.post('/query-by-ids', asyncHandler(rulesController.getRulesByIds));
+router.post('/', asyncHandler(rulesController.createRule));
 // DELETE /api/rules/:id
-router.delete('/delete/:id', asyncHandler(rulesController.deleteRule));
+router.delete('/:id', asyncHandler(rulesController.deleteRule));
 // PUT /api/rules/:id
-router.put('/update/:id', asyncHandler(rulesController.updateRule));
+router.put('/:id', asyncHandler(rulesController.updateRule));
 // PATCH /api/rules/:id
-router.patch('/update/:id/toggle-active', asyncHandler(rulesController.toggleActiveRule));
+router.patch('/:id/toggle-active', asyncHandler(rulesController.toggleActiveRule));
 module.exports = router;

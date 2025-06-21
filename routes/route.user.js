@@ -5,15 +5,15 @@ const userController = require('../controllers/controller.user');
 const asyncHandler = require('../utils/util.asyncHandler');
 
 // GET /api/users
-router.get('/getAll', asyncHandler(userController.getAllUsers));
-router.get('/getOne/:id', asyncHandler(userController.getUserById));
-router.get('/getMul', asyncHandler(userController.getUsersByIds));
+router.get('/', asyncHandler(userController.getAllUsers));
+router.get('/:id', asyncHandler(userController.getUserById));
+router.post('/query-by-ids', asyncHandler(userController.getUsersByIds));
 // POST /api/users
-router.post('/create', asyncHandler(userController.createUser));
+router.post('/', asyncHandler(userController.createUser));
 // PUT /api/users/:id
-router.put('/update/:id', asyncHandler(userController.updateUser));
+router.put('/:id', asyncHandler(userController.updateUser));
 // PATCH /api/users/:id
-router.patch('/update/:id/update-balance', asyncHandler(userController.updateUserBalance));
+router.patch('/:id/balance', asyncHandler(userController.updateUserBalance));
 // DELETE /api/users/:id
-router.delete('/delete/:id', asyncHandler(userController.deleteUser));
+router.delete('/:id', asyncHandler(userController.deleteUser));
 module.exports = router;
