@@ -13,12 +13,12 @@ exports.getAllUsers = async (req, res) => {
         data: users
     });
 };
-exports.getAUser = async (req, res) => {
+exports.getUserById = async (req, res) => {
     const userId = req.params.id;
     if (!userId) {
         throw new ApiError(404, 'No user found via id');
     }
-    const result = await userService.getAUser(userId);
+    const result = await userService.getUserById(userId);
     if (!result || result.length === 0) {
         throw new ApiError(404, 'User not found');
     }
@@ -29,6 +29,32 @@ exports.getAUser = async (req, res) => {
         data: result
     });
 };
+
+exports.getUsersByIds = async (req, res) => {
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ApiError(400, 'Request body is required');
+    }
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+        throw new ApiError(400, 'A non-empty array of User IDs is required');
+    }
+
+    const users = await userService.getUsersByIds(ids);
+
+    const foundIds = users.map(user => user.id);
+    const missingIds = ids.filter(id => !foundIds.includes(id));
+
+    if (!users || users.length === 0) {
+        throw new ApiError(404, `No user's found for the provided IDs`);
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Fetched transactions successfully',
+        data: users,
+        missingIds: missingIds.length > 0 ? missingIds : undefined
+    });
+}
+
 
 exports.createUser = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {

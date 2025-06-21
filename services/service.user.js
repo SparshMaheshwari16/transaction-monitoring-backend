@@ -5,10 +5,17 @@ module.exports.getAllUser = async () => {
     return result.rows;
 };
 
-module.exports.getAUser = async (id) => {
+module.exports.getUserById = async (id) => {
     const result = await pool.query('SELECT * FROM users WHERE id=$1', [id]);
     return result.rows;
 };
+
+module.exports.getUsersByIds = async (ids) => {
+    const result = await pool.query('SELECT * FROM users WHERE id=ANY($1)', [ids]);
+    return result.rows;
+}
+
+
 module.exports.createUser = async (name, balance) => {
     const result = await pool.query(
         'INSERT INTO users (name, balance) VALUES ($1, $2) RETURNING *',

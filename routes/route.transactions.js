@@ -7,5 +7,6 @@ const asyncHandler = require('../utils/util.asyncHandler');
 // GET /api/transactions
 router.get('/getAll', asyncHandler(transactionsController.getAllTransactions));
 router.get('/getOne/:id', asyncHandler(transactionsController.getATransaction));
+router.get('/getMul', asyncHandler(transactionsController.getTransactionsByIds));
 
 module.exports = router;

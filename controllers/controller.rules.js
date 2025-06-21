@@ -21,7 +21,7 @@ exports.getAllRules = async (req, res) => {
     // res.status(500).json({ error: 'Failed to fetch rules' });
 
 };
-exports.getARule = async (req, res) => {
+exports.getRuleById = async (req, res) => {
     const ruleId = req.params.id;
     if (!ruleId) {
         throw new ApiError(400, 'Rule ID is required');
@@ -38,10 +38,31 @@ exports.getARule = async (req, res) => {
         message: 'Fetched a rule by id successfully',
         data: result
     });
-
-
 };
+exports.getRulesByIds = async (req, res) => {
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ApiError(400, 'Request body is required');
+    }
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+        throw new ApiError(400, 'A non-empty array of Rule IDs is required');
+    }
 
+    const rules = await ruleService.getRulesByIds(ids);
+
+    const foundIds = rules.map(rule => rule.id);
+    const missingIds = ids.filter(id => !foundIds.includes(id));
+
+    if (!rules || rules.length === 0) {
+        throw new ApiError(404, 'No rules found for the provided IDs');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Fetched rules successfully',
+        data: rules,
+        missingIds: missingIds.length > 0 ? missingIds : undefined
+    });
+}
 exports.createRule = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
         // return res.status(400).json({ error: 'Request body is required' });

@@ -5,7 +5,8 @@ const rulesController = require('../controllers/controller.rules');
 const asyncHandler = require('../utils/util.asyncHandler');
 // GET /api/rules
 router.get('/getAll', asyncHandler(rulesController.getAllRules));
-router.get('/getOne/:id', asyncHandler(rulesController.getARule));
+router.get('/getOne/:id', asyncHandler(rulesController.getRuleById));
+router.get('/getMul', asyncHandler(rulesController.getRulesByIds));
 // POST /api/rules
 router.post('/create', asyncHandler(rulesController.createRule));
 // DELETE /api/rules/:id
