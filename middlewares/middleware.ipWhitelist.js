@@ -9,14 +9,14 @@ const allowedIPs = [
 
 function ipWhitelist(req, res, next) {
     const requestIP = req.ip || req.connection.remoteAddress;
-
+    // console.log(requestIP);
     if (allowedIPs.includes(requestIP)) {
         return next(); // Allow request
     }
 
     console.warn(`Blocked request from IP: ${requestIP}`);
     throw new ApiError(403, 'Access denied: IP not allowed');
-    
+
 }
 
 module.exports = ipWhitelist;

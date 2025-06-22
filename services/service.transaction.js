@@ -15,3 +15,13 @@ module.exports.getTransactionsByIds = async (ids) => {
     return result.rows;
 }
 
+module.exports.resetFlagStatus = async () => {
+    const result = await pool.query('UPDATE transactions SET flag=NULL , flagged_by_rule=NULL RETURNING *')
+    return result.rows;
+}
+
+module.exports.resetFlagStatusByIds = async (ids) => {
+    const result = await pool.query('UPDATE transactions SET flag=NULL , flagged_by_rule=NULL WHERE id=ANY($1) RETURNING *', [ids])
+    return result.rows;
+}
+

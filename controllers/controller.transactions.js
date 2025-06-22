@@ -1,5 +1,6 @@
 const pool = require('../db'); // Adjust the path to your db connection
 const transactionService = require('../services/service.transaction');
+const ApiError = require('../utils/util.ApiError');
 
 exports.getAllTransactions = async (req, res) => {
 
@@ -19,7 +20,7 @@ exports.getAllTransactions = async (req, res) => {
     // res.status(500).json({ error: 'Failed to fetch transactions' });
 
 };
-exports.getATransaction = async (req, res) => {
+exports.getTransactionById = async (req, res) => {
     const transactionId = req.params.id;
 
     if (!transactionId) {
@@ -50,7 +51,7 @@ exports.getTransactionsByIds = async (req, res) => {
     }
     const { ids } = req.body;
     if (!Array.isArray(ids) || ids.length === 0) {
-        throw new ApiError(400, 'A non-empty array of Rule IDs is required');
+        throw new ApiError(400, 'A non-empty array of Transaction IDs is required');
     }
 
     const transactions = await transactionService.getTransactionsByIds(ids);
@@ -67,5 +68,46 @@ exports.getTransactionsByIds = async (req, res) => {
         data: transactions,
         missingIds: missingIds.length > 0 ? missingIds : undefined
     });
-}
+};
+
+exports.resetFlagStatus = async (req, res) => {
+    const result = await transactionService.resetFlagStatus();
+
+    if (!result) {
+        throw new ApiError(404, 'No transactions founds');
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'Updated the flag and flagged_by_rule to NULL for all transactions successfully',
+        data: result
+    });
+};
+
+exports.resetFlagStatusByIds = async (req, res) => {
+    console.log('here55');
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ApiError(400, 'Request body is required');
+    }
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+        throw new ApiError(400, 'A non-empty array of Transaction IDs is required');
+    }
+
+    const transactions = await transactionService.resetFlagStatusByIds(ids);
+
+    const foundIds = transactions.map(transaction => transaction.id);
+    const missingIds = ids.filter(id => !foundIds.includes(id));
+
+    if (!transactions || transactions.length === 0) {
+        throw new ApiError(404, 'No transactions found for the provided IDs');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Updated the flag and flagged_by_rule to NULL for transactions successfully',
+        data: transactions,
+        missingIds: missingIds.length > 0 ? missingIds : undefined
+    });
+};
+
 
