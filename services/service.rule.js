@@ -5,7 +5,14 @@ module.exports.getAllRules = async () => {
     const result = await pool.query('SELECT * FROM rules');
     return result.rows;
 };
-
+module.exports.getAllActiveRules = async () => {
+    const result = await pool.query('SELECT * FROM rules WHERE is_active=true');
+    return result.rows;
+};
+module.exports.getAllInactiveRules = async () => {
+    const result = await pool.query('SELECT * FROM rules WHERE is_active=false');
+    return result.rows;
+};
 module.exports.getRuleById = async (id) => {
     const result = await pool.query('SELECT * FROM rules WHERE id = $1', [id]);
     return result.rows[0]; // return first row or undefined if not found

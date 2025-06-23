@@ -21,6 +21,31 @@ exports.getAllRules = async (req, res) => {
     // res.status(500).json({ error: 'Failed to fetch rules' });
 
 };
+
+exports.getAllActiveRules=async(req,res)=>{
+    const activeRules=await ruleService.getAllActiveRules();
+    console.log(`${activeRules}`);
+    if(!activeRules || activeRules.length===0){
+        throw new ApiError(404,'No active rules found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Fetched all active rules successfully',
+        data: activeRules
+    });
+};
+exports.getAllInactiveRules=async(req,res)=>{
+    const inactiveRules=await ruleService.getAllInactiveRules();
+    console.log(`${inactiveRules}`);
+    if(!inactiveRules || inactiveRules.length===0){
+        throw new ApiError(404,'No inactive rules found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Fetched all inactive rules successfully',
+        data: inactiveRules
+    });
+};
 exports.getRuleById = async (req, res) => {
     const ruleId = req.params.id;
     if (!ruleId) {
