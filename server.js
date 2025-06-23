@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
     //     return res.status(400).json({ error: 'Invalid JSON payload' });
     // }
 
-    // console.log(err);
+    console.log(`err: ${err}`);
     console.error(`Error occurred on ${req.method} ${req.originalUrl}`);
     if (err.originalError) {
         console.error('Original Error:', err.originalError);
