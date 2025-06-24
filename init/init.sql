@@ -18,7 +18,8 @@ CREATE TYPE origination_enum AS ENUM (
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     name VARCHAR(100) NOT NULL,
-    balance INTEGER NOT NULL DEFAULT 0 CHECK (balance >= 0) 
+    balance INTEGER NOT NULL DEFAULT 0 CHECK (balance >= 0),
+    risk_score NUMERIC(4,2) NOT NULL DEFAULT 0.00 CHECK (risk_score >= 0.00 AND risk_score <= 99.99)
 );
 CREATE TABLE rules (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
