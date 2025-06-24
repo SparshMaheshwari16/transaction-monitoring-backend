@@ -70,6 +70,30 @@ exports.getTransactionsByIds = async (req, res) => {
     });
 };
 
+exports.getUnevaluatedTransactions = async (req, res) => {
+    const result = await transactionService.getUnevaluatedTransactions();
+    if (!result || result.length === 0) {
+        throw new ApiError(404, 'No unevaluated transactions found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Fetched all unevaluated transactions successfully',
+        data: result
+    });
+};
+
+exports.getEvaluatedTransactions = async (req, res) => {
+    const result = await transactionService.getEvaluatedTransactions();
+    if (!result || result.length === 0) {
+        throw new ApiError(404, 'No evaluated transactions found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Fetched all evaluated transactions successfully',
+        data: result
+    });
+}
+
 exports.resetFlagStatus = async (req, res) => {
     const result = await transactionService.resetFlagStatus();
 
@@ -85,7 +109,6 @@ exports.resetFlagStatus = async (req, res) => {
 };
 
 exports.resetFlagStatusByIds = async (req, res) => {
-    console.log('here55');
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
     }

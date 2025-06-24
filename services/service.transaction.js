@@ -15,6 +15,16 @@ module.exports.getTransactionsByIds = async (ids) => {
     return result.rows;
 }
 
+module.exports.getUnevaluatedTransactions = async () => {
+    const result = await pool.query('SELECT * FROM transactions WHERE flag IS NULL AND flagged_by_rule IS NULL');
+    return result.rows;
+}
+
+module.exports.getEvaluatedTransactions = async () => {
+    const result = await pool.query('SELECT * FROM transactions WHERE flag IS NOT NULL AND flagged_by_rule IS NOT NULL');
+    return result.rows;
+}
+
 module.exports.resetFlagStatus = async () => {
     const result = await pool.query('UPDATE transactions SET flag=NULL , flagged_by_rule=NULL RETURNING *')
     return result.rows;

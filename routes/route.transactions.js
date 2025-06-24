@@ -6,6 +6,8 @@ const asyncHandler = require('../utils/util.asyncHandler');
 
 // GET /api/transactions
 router.get('/', asyncHandler(transactionsController.getAllTransactions));
+router.get('/unevaluated', asyncHandler(transactionsController.getUnevaluatedTransactions));
+router.get('/evaluated', asyncHandler(transactionsController.getEvaluatedTransactions));
 router.get('/:id', asyncHandler(transactionsController.getTransactionById));
 router.post('/query-by-ids', asyncHandler(transactionsController.getTransactionsByIds));
 router.patch('/:id/reset-flag', asyncHandler(transactionsController.resetFlagStatus));
