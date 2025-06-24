@@ -47,7 +47,7 @@ CREATE TABLE transactions (
     origination origination_enum NOT NULL,
     cross_border BOOLEAN NOT NULL DEFAULT FALSE,
     transaction_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    risk_score NUMERIC(4,2) NOT NULL DEFAULT 0.00 CHECK (risk_score >= 0.00 AND risk_score <= 99.99),
+    -- risk_score NUMERIC(4,2) NOT NULL DEFAULT 0.00 CHECK (risk_score >= 0.00 AND risk_score <= 99.99),
     pep_status BOOLEAN NOT NULL DEFAULT FALSE,
     flag flag_enum DEFAULT NULL,
 
