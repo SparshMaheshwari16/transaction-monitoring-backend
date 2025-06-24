@@ -9,9 +9,12 @@ exports.dryRunARuleOnATransaction = async (req, res) => {
         throw new ApiError(400, 'ruleId and transactionId are required')
     }
     const rule = await ruleService.getRuleById(ruleId);
-    // const transaction = await transactionService.getTransactionById(transactionId);
     if (!rule) {
         throw new ApiError(404, "Rule not found with the given ID");
+    }
+    const transaction = await transactionService.getTransactionById(transactionId);
+    if (!transaction) {
+        throw new ApiError(404, "Transaction not found with the given ID");
     }
     const condition = rule.condition;
 
@@ -35,12 +38,16 @@ exports.dryRunARuleOnATransaction = async (req, res) => {
     }
 
     const result = await pool.query(query, [transactionId]);
+    const isMatch = result.rowCount > 0;
+
 
     res.json({
         message: 'This is a dry run for rule evaluation',
-        rule: rule,
-        // transaction: transaction
-        result: result.rowCount
+        rule: rule.condition,
+        transaction: transaction,
+        ruleMatches: isMatch,
+        note: isMatch
+            ? 'Transaction satisfies the rule condition'
+            : 'Transaction exists but does not match the rule condition'
     });
-
 };
