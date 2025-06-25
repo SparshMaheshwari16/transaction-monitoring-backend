@@ -10,7 +10,7 @@ router.get('/unevaluated', asyncHandler(transactionsController.getUnevaluatedTra
 router.get('/evaluated', asyncHandler(transactionsController.getEvaluatedTransactions));
 router.get('/:id', asyncHandler(transactionsController.getTransactionById));
 router.post('/query-by-ids', asyncHandler(transactionsController.getTransactionsByIds));
-router.patch('/:id/reset-flag', asyncHandler(transactionsController.resetFlagStatus));
+router.patch('/reset-flag', asyncHandler(transactionsController.resetFlagStatus));
 router.patch('/reset-flag-by-ids', asyncHandler(transactionsController.resetFlagStatusByIds));
 
 module.exports = router;
