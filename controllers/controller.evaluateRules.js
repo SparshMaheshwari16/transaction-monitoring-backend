@@ -13,6 +13,9 @@ exports.dryRunARuleOnATransaction = async (req, res) => {
     if (!rule) {
         throw new ApiError(404, "Rule not found with the given ID");
     }
+    if(!rule.is_active){
+        throw new ApiError(404,"Rule is not active");
+    }
     const transaction = await transactionService.getTransactionById(transactionId);
     if (!transaction) {
         throw new ApiError(404, "Transaction not found with the given ID");
