@@ -301,7 +301,6 @@ exports.evaluateRules2 = async (req, res) => {
         matches,
         missingRuleIds,
         missingTransactionIds,
-        executionTime: `${timeInSeconds.toFixed(3)} seconds`
     });
 
     console.log(`Evaluating rule 2 Done`);
