@@ -12,6 +12,9 @@ router.post('/query-by-ids', asyncHandler(userController.getUsersByIds));
 router.post('/', asyncHandler(userController.createUser));
 // PUT /api/users/:id
 router.put('/:id', asyncHandler(userController.updateUser));
+
+router.patch('/reset-risk-score', asyncHandler(userController.resetRiskScore));
+
 // PATCH /api/users/:id
 router.patch('/:id/balance', asyncHandler(userController.updateUserBalance));
 // DELETE /api/users/:id

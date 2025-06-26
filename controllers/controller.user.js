@@ -144,4 +144,17 @@ exports.updateUserBalance = async (req, res) => {
     });
 };
 
+exports.resetRiskScore = async (req, res) => {
+
+    const result = await userService.resetRiskScore();
+    if (!result) {
+        throw new ApiError(404, 'User not found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'All Users risk score=0 updated successfully',
+        data: result
+    });
+};
+
 
