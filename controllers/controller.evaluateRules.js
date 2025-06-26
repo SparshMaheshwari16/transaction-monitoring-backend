@@ -54,8 +54,6 @@ exports.dryRunARuleOnATransaction = async (req, res) => {
 };
 
 exports.evaluateRules = async (req, res) => {
-    const start = process.hrtime();
-
     let cnt = 0;
     const { ruleIds, transactionIds } = req.body;
 
@@ -174,9 +172,7 @@ exports.evaluateRules = async (req, res) => {
             }
         }
         cnt = cnt + 100;
-        const diff = process.hrtime(start);
-        const timeInSeconds = diff[0] + diff[1] / 1e9;
-        console.log(`Time taken: ${timeInSeconds.toFixed(3)} seconds to process ${cnt} queries`);
+        console.log(`Process ${cnt} queries`);
 
     }
 
@@ -192,8 +188,6 @@ exports.evaluateRules = async (req, res) => {
 };
 
 exports.evaluateRules2 = async (req, res) => {
-    const start = process.hrtime();
-
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
     }
@@ -301,10 +295,6 @@ exports.evaluateRules2 = async (req, res) => {
     // Wait for all updates to complete
     await Promise.all(updatePromises);
 
-
-    const diff = process.hrtime(start);
-    const timeInSeconds = diff[0] + diff[1] / 1e9;
-
     res.json({
         message: 'SQL-only rule evaluation complete',
         totalEvaluated: matches.length,
@@ -314,14 +304,12 @@ exports.evaluateRules2 = async (req, res) => {
         executionTime: `${timeInSeconds.toFixed(3)} seconds`
     });
 
-    console.log(`Evaluating rule 2 Done in ${timeInSeconds.toFixed(3)} seconds`);
+    console.log(`Evaluating rule 2 Done`);
 };
 
 
 
 exports.evaluateRules3 = async (req, res) => {
-    const start = process.hrtime();
-
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
     }
@@ -333,19 +321,15 @@ exports.evaluateRules3 = async (req, res) => {
     const matches = await evaluateRulesService.evaluateRules(rules, txnIdSet, transactionIds);
     await evaluateRulesService.applyRuleEffects(matches, rules, transactions);
 
-    const diff = process.hrtime(start);
-    const timeInSeconds = diff[0] + diff[1] / 1e9;
-
     res.json({
         message: 'SQL-only rule evaluation complete',
         totalEvaluated: matches.length,
         matches,
         missingRuleIds,
-        missingTransactionIds,
-        executionTime: `${timeInSeconds.toFixed(3)} seconds`
+        missingTransactionIds
     });
 
-    console.log(`Evaluating rule 3 Done in ${timeInSeconds.toFixed(3)} seconds`);
+    console.log(`Evaluating rule 3 Done`);
 };
 
 
