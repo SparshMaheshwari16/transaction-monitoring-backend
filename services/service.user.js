@@ -41,3 +41,9 @@ module.exports.updateUserBalance = async (id, balance) => {
     );
     return result.rows[0];
 }
+module.exports.resetRiskScore = async () => {
+    const result = await pool.query(
+        'UPDATE users SET risk_score = 0 RETURNING *'
+    );
+    return result.rows;
+}

@@ -143,6 +143,19 @@ exports.evaluateRules = async (req, res) => {
             // console.log(`rule id: ${rule.id}`);
             try {
                 const result = await pool.query(query, params);
+
+                if (result.rowCount > 0) {
+                    // If the rule matched, update the user's risk score
+                    const updateRiskScoreQuery = `
+                    UPDATE users u
+                    SET risk_score = LEAST(u.risk_score+$1, 99.99)
+                    WHERE u.id= $2;
+                    `;
+
+                    const riskParams = [rule.risk_increment, txn.receiver_id];
+                    await pool.query(updateRiskScoreQuery, riskParams);
+                }
+
                 matches.push({
                     ruleId: rule.id,
                     transactionId: txn.id,
@@ -271,16 +284,17 @@ exports.evaluateRules2 = async (req, res) => {
         const userId = txn.receiver_id; // assuming receiver is the target
         if (!userId) continue;
 
+        const increment = parseFloat(rule.risk_increment);
+
         if (!userRiskUpdates.has(userId)) {
-            userRiskUpdates.set(userId, rule.risk_increment);
+            userRiskUpdates.set(userId, increment);
         } else {
-            userRiskUpdates.set(userId, userRiskUpdates.get(userId) + rule.risk_increment);
+            userRiskUpdates.set(userId, userRiskUpdates.get(userId) + increment);
         }
     }
 
     // Update user risk scores
     for (const [userId, totalIncrement] of userRiskUpdates.entries()) {
-        console.log(`user id:${userId}`);
         updatePromises.push(pool.query(
             `UPDATE users 
             SET risk_score = LEAST(risk_score + $1, 99.99)
