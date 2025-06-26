@@ -2,6 +2,7 @@ const pool = require('../db'); // Adjust the path to your db connection
 const ruleService = require('../services/service.rule');
 const ApiError = require('../utils/util.ApiError');
 const transactionService = require('../services/service.transaction');
+const evaluateRulesService = require('../services/service.evaluateRules');
 
 exports.dryRunARuleOnATransaction = async (req, res) => {
     const { ruleId, transactionId } = req.params;
@@ -190,12 +191,6 @@ exports.evaluateRules = async (req, res) => {
     console.log(`Evaluating rule 1 Done`);
 };
 
-
-
-
-
-
-
 exports.evaluateRules2 = async (req, res) => {
     const start = process.hrtime();
 
@@ -320,6 +315,37 @@ exports.evaluateRules2 = async (req, res) => {
     });
 
     console.log(`Evaluating rule 2 Done in ${timeInSeconds.toFixed(3)} seconds`);
+};
+
+
+
+exports.evaluateRules3 = async (req, res) => {
+    const start = process.hrtime();
+
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ApiError(400, 'Request body is required');
+    }
+
+    const { ruleIds, transactionIds } = req.body;
+
+    const { rules, missingRuleIds } = await evaluateRulesService.fetchRules(ruleIds);
+    const { transactions, missingTransactionIds, txnIdSet } = await evaluateRulesService.fetchTransactions(transactionIds);
+    const matches = await evaluateRulesService.evaluateRules(rules, txnIdSet, transactionIds);
+    await evaluateRulesService.applyRuleEffects(matches, rules, transactions);
+
+    const diff = process.hrtime(start);
+    const timeInSeconds = diff[0] + diff[1] / 1e9;
+
+    res.json({
+        message: 'SQL-only rule evaluation complete',
+        totalEvaluated: matches.length,
+        matches,
+        missingRuleIds,
+        missingTransactionIds,
+        executionTime: `${timeInSeconds.toFixed(3)} seconds`
+    });
+
+    console.log(`Evaluating rule 3 Done in ${timeInSeconds.toFixed(3)} seconds`);
 };
 
 
