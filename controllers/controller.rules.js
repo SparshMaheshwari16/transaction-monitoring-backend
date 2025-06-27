@@ -24,7 +24,7 @@ exports.getAllRules = async (req, res) => {
 
 exports.getAllActiveRules=async(req,res)=>{
     const activeRules=await ruleService.getAllActiveRules();
-    console.log(`${activeRules}`);
+    
     if(!activeRules || activeRules.length===0){
         throw new ApiError(404,'No active rules found');
     }
@@ -36,7 +36,7 @@ exports.getAllActiveRules=async(req,res)=>{
 };
 exports.getAllInactiveRules=async(req,res)=>{
     const inactiveRules=await ruleService.getAllInactiveRules();
-    console.log(`${inactiveRules}`);
+    
     if(!inactiveRules || inactiveRules.length===0){
         throw new ApiError(404,'No inactive rules found');
     }
