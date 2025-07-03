@@ -53,6 +53,9 @@ app.use((req, res) => {
     res.status(404).send('Page not found');
 });
 
+// Import and start cron job
+require('./cron/cron.test.js');
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
