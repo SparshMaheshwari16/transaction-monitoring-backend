@@ -15,6 +15,7 @@ const transactionRoutes = require('./routes/route.transactions.js');
 const rulesRoutes = require('./routes/route.rules.js');
 const userRoutes = require('./routes/route.user.js');
 const evaluateRulesRoutes = require('./routes/route.evaluateRules.js');
+const userTransSumRoutes = require('./routes/route.user_transaction_summary.js');
 
 const ipWhitelist = require('./middlewares/middleware.ipWhiteList.js');
 const authenticateApiKey = require('./middlewares/middleware.auth.js');
@@ -32,6 +33,9 @@ app.use('/api/users', ipWhitelist, authenticateApiKey, userRoutes);
 
 // /evaluate
 app.use('/api/evaluateRule', ipWhitelist, authenticateApiKey, evaluateRulesRoutes);
+
+// /user_transaction_summary
+app.use('/api/user_trans_sum',ipWhitelist,authenticateApiKey,userTransSumRoutes)
 
 app.use((err, req, res, next) => {
     // console.error(err.stack);
