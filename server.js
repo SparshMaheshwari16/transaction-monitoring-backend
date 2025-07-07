@@ -39,7 +39,7 @@ app.use('/api/evaluateRule', ipWhitelist, authenticateApiKey, evaluateRulesRoute
 app.use('/api/user_trans_sum', ipWhitelist, authenticateApiKey, userTransSumRoutes)
 
 // /user_transaction_summary
-app.use('/api/behavioral-variable ', ipWhitelist, authenticateApiKey, behavioralVariableRoutes)
+app.use('/api/behavioral-variable', ipWhitelist, authenticateApiKey, behavioralVariableRoutes)
 
 app.use((err, req, res, next) => {
     // console.error(err.stack);
