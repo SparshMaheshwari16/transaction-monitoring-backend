@@ -19,7 +19,8 @@ CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     name VARCHAR(100) NOT NULL,
     balance INTEGER NOT NULL DEFAULT 0 CHECK (balance >= 0),
-    risk_score NUMERIC(4,2) NOT NULL DEFAULT 0.00 CHECK (risk_score >= 0.00 AND risk_score <= 99.99)
+    risk_score NUMERIC(4,2) NOT NULL DEFAULT 0.00 CHECK (risk_score >= 0.00 AND risk_score <= 99.99),
+    kyc_last_updated DATE NOT NULL DEFAULT CURRENT_DATE
 );
 CREATE TABLE rules (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -29,7 +30,8 @@ CREATE TABLE rules (
     flag_level flag_enum NOT NULL, -- Enum: 'Low', 'Medium', 'High'
     risk_increment NUMERIC(4,2) NOT NULL CHECK (risk_increment >= 0 AND risk_increment <= 99.99),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Step 4: Create the transactions table
@@ -74,4 +76,23 @@ CREATE TABLE user_transaction_summary (
     trans_count_90d INT NOT NULL DEFAULT 0,
     
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE behavioral_variables (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    variable_name TEXT UNIQUE NOT NULL,       -- e.g. 'avg_amount_30d'
+    variable_group TEXT,                      -- e.g. 'behavioral', 'risk', 'aml'
+
+    target_table TEXT NOT NULL DEFAULT 'user_transaction_summary',
+    target_column TEXT NOT NULL,              -- e.g. 'avg_30d'
+    sql_template TEXT NOT NULL,               -- e.g. SELECT AVG(amount) ... with $USER_ID placeholder
+
+    update_frequency INTERVAL NOT NULL DEFAULT INTERVAL '1 day', -- how often to recalculate
+
+    is_active BOOLEAN DEFAULT TRUE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

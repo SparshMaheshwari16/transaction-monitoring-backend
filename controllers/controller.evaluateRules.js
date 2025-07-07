@@ -13,8 +13,8 @@ exports.dryRunARuleOnATransaction = async (req, res) => {
     if (!rule) {
         throw new ApiError(404, "Rule not found with the given ID");
     }
-    if(!rule.is_active){
-        throw new ApiError(404,"Rule is not active");
+    if (!rule.is_active) {
+        throw new ApiError(404, "Rule is not active");
     }
     const transaction = await transactionService.getTransactionById(transactionId);
     if (!transaction) {
@@ -307,6 +307,278 @@ exports.evaluateRules2 = async (req, res) => {
     });
 
     console.log(`Evaluating rule 2 Done`);
+};
+exports.evaluateRules21 = async (req, res) => {
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ApiError(400, 'Request body is required');
+    }
+
+    const { ruleIds, transactionIds } = req.body;
+
+    const evaluateAllRules = !Array.isArray(ruleIds) || ruleIds.length === 0;
+    const evaluateAllTransactions = !Array.isArray(transactionIds) || transactionIds.length === 0;
+
+    // Define flag priority
+    const flagPriority = { low: 1, medium: 2, high: 3 };
+
+    // Fetch rules
+    let rules = evaluateAllRules
+        ? await ruleService.getAllActiveRules()
+        : await ruleService.getRulesByIds(ruleIds);
+
+    const fetchedRuleIds = rules.map(r => r.id);
+    const missingRuleIds = ruleIds?.filter(id => !fetchedRuleIds.includes(id)) || [];
+
+    if (!rules.length) throw new ApiError(404, 'No matching rules found');
+
+    // Fetch transactions
+    let transactions = evaluateAllTransactions
+        ? await transactionService.getUnevaluatedTransactions()
+        : await transactionService.getTransactionsByIds(transactionIds);
+
+    const fetchedTxnIds = transactions.map(t => t.id);
+    const missingTransactionIds = transactionIds?.filter(id => !fetchedTxnIds.includes(id)) || [];
+
+    if (!transactions.length) throw new ApiError(404, 'No matching transactions found');
+
+    const txnIdSet = new Set(fetchedTxnIds);
+    const matches = [];
+
+    const queryPromises = rules.map(rule => {
+        const condition = rule.condition;
+        const needsJoin = condition.includes('uts.');
+        const txnFilter = evaluateAllTransactions
+            ? ''
+            : `t.id IN (${Array.from(txnIdSet).map(id => `'${id}'`).join(',')}) AND`;
+
+        const query = `
+            SELECT t.id as transaction_id, '${rule.id}' as rule_id
+            FROM transactions t
+            ${needsJoin ? 'JOIN user_transaction_summary uts ON uts.user_id = t.receiver_id' : ''}
+            WHERE ${txnFilter} ${condition}
+        `;
+        // console.log(query);
+        return pool.query(query)
+            .then(result => result.rows.map(row => ({
+                ruleId: row.rule_id,
+                transactionId: row.transaction_id,
+                ruleMatches: true
+            })))
+            .catch(err => [{
+                ruleId: rule.id,
+                transactionId: null,
+                ruleMatches: false,
+                error: err.message
+            }]);
+    });
+
+    const results = await Promise.all(queryPromises);
+    results.forEach(r => matches.push(...r));
+
+    const txnBestRuleMap = new Map(); // transactionId -> { flagLevel, ruleId }
+    const userRiskUpdates = new Map(); // userId -> cumulative risk_increment
+
+    for (const match of matches) {
+        const rule = rules.find(r => r.id === match.ruleId);
+        const txn = transactions.find(t => t.id === match.transactionId);
+
+        if (!rule || !txn) continue;
+
+        const txnId = txn.id;
+        const newFlag = rule.flag_level;
+
+        const current = txnBestRuleMap.get(txnId);
+
+        if (!current || flagPriority[newFlag] > flagPriority[current.flagLevel]) {
+            txnBestRuleMap.set(txnId, {
+                flagLevel: newFlag,
+                ruleId: rule.id,
+                riskIncrement: parseFloat(rule.risk_increment),
+                userId: txn.receiver_id
+            });
+        }
+        // Accumulate user risk increment
+        const userId = txn.receiver_id;
+        if (!userId) continue;
+
+        const increment = parseFloat(rule.risk_increment);
+        if (!userRiskUpdates.has(userId)) {
+            userRiskUpdates.set(userId, increment);
+        } else {
+            userRiskUpdates.set(userId, userRiskUpdates.get(userId) + increment);
+        }
+    }
+
+    const updatePromises = [];
+
+    // Apply the most severe rule per transaction
+    for (const [txnId, { flagLevel, ruleId }] of txnBestRuleMap.entries()) {
+        updatePromises.push(pool.query(
+            `UPDATE transactions 
+             SET flag = $1, flagged_by_rule = $2 
+             WHERE id = $3`,
+            [flagLevel, ruleId, txnId]
+        ));
+    }
+
+    // Update risk scores
+    for (const [userId, totalIncrement] of userRiskUpdates.entries()) {
+        updatePromises.push(pool.query(
+            `UPDATE users 
+             SET risk_score = LEAST(risk_score + $1, 99.99)
+             WHERE id = $2`,
+            [totalIncrement, userId]
+        ));
+    }
+
+    await Promise.all(updatePromises);
+
+    res.json({
+        message: 'SQL-only rule evaluation complete',
+        totalEvaluated: matches.length,
+        matches,
+        missingRuleIds,
+        missingTransactionIds,
+    });
+
+    console.log(`Evaluating rule 2.1 Done`);
+};
+exports.evaluateRules22 = async (req, res) => {
+    if (!req.body || Object.keys(req.body).length === 0) {
+        throw new ApiError(400, 'Request body is required');
+    }
+
+    const { ruleIds, transactionIds } = req.body;
+
+    const evaluateAllRules = !Array.isArray(ruleIds) || ruleIds.length === 0;
+    const evaluateAllTransactions = !Array.isArray(transactionIds) || transactionIds.length === 0;
+
+    // Define flag priority
+    const flagPriority = { low: 1, medium: 2, high: 3 };
+
+    // Fetch rules
+    let rules = evaluateAllRules
+        ? await ruleService.getAllActiveRules()
+        : await ruleService.getRulesByIds(ruleIds);
+
+    const fetchedRuleIds = rules.map(r => r.id);
+    const missingRuleIds = ruleIds?.filter(id => !fetchedRuleIds.includes(id)) || [];
+
+    if (!rules.length) throw new ApiError(404, 'No matching rules found');
+
+    // Fetch transactions
+    let transactions = evaluateAllTransactions
+        ? await transactionService.getUnevaluatedTransactions()
+        : await transactionService.getTransactionsByIds(transactionIds);
+
+    const fetchedTxnIds = transactions.map(t => t.id);
+    const missingTransactionIds = transactionIds?.filter(id => !fetchedTxnIds.includes(id)) || [];
+
+    if (!transactions.length) throw new ApiError(404, 'No matching transactions found');
+
+    const txnIdSet = new Set(fetchedTxnIds);
+    const matches = [];
+
+    // Run SQL queries for each rule
+    const queryPromises = rules.map(rule => {
+        const condition = rule.condition;
+        const needsJoin = condition.includes('uts.');
+        const txnFilter = evaluateAllTransactions
+            ? ''
+            : `t.id IN (${Array.from(txnIdSet).map(id => `'${id}'`).join(',')}) AND`;
+
+        const query = `
+            SELECT t.id as transaction_id, '${rule.id}' as rule_id
+            FROM transactions t
+            ${needsJoin ? 'JOIN user_transaction_summary uts ON uts.user_id = t.receiver_id' : ''}
+            WHERE ${txnFilter} ${condition}
+        `;
+
+        return pool.query(query)
+            .then(result => result.rows.map(row => ({
+                ruleId: row.rule_id,
+                transactionId: row.transaction_id,
+                ruleMatches: true
+            })))
+            .catch(err => [{
+                ruleId: rule.id,
+                transactionId: null,
+                ruleMatches: false,
+                error: err.message
+            }]);
+    });
+
+    const results = await Promise.all(queryPromises);
+    results.forEach(r => matches.push(...r));
+
+    const txnBestRuleMap = new Map(); // transactionId -> { flagLevel, ruleId, riskIncrement, userId }
+    const userRiskUpdates = new Map(); // userId -> cumulative risk_increment
+
+    // Determine best rule per transaction
+    for (const match of matches) {
+        const rule = rules.find(r => r.id === match.ruleId);
+        const txn = transactions.find(t => t.id === match.transactionId);
+
+        if (!rule || !txn) continue;
+
+        const txnId = txn.id;
+        const newFlag = rule.flag_level;
+
+        const current = txnBestRuleMap.get(txnId);
+
+        if (!current || flagPriority[newFlag] > flagPriority[current.flagLevel]) {
+            txnBestRuleMap.set(txnId, {
+                flagLevel: newFlag,
+                ruleId: rule.id,
+                riskIncrement: parseFloat(rule.risk_increment),
+                userId: txn.receiver_id
+            });
+        }
+    }
+
+    const updatePromises = [];
+
+    // Apply the best rule per transaction and accumulate risk
+    for (const [txnId, { flagLevel, ruleId, riskIncrement, userId }] of txnBestRuleMap.entries()) {
+        // Update transaction with best rule
+        updatePromises.push(pool.query(
+            `UPDATE transactions 
+             SET flag = $1, flagged_by_rule = $2 
+             WHERE id = $3`,
+            [flagLevel, ruleId, txnId]
+        ));
+
+        // Accumulate user risk increment
+        if (userId) {
+            if (!userRiskUpdates.has(userId)) {
+                userRiskUpdates.set(userId, riskIncrement);
+            } else {
+                userRiskUpdates.set(userId, userRiskUpdates.get(userId) + riskIncrement);
+            }
+        }
+    }
+
+    // Update user risk scores
+    for (const [userId, totalIncrement] of userRiskUpdates.entries()) {
+        updatePromises.push(pool.query(
+            `UPDATE users 
+             SET risk_score = LEAST(risk_score + $1, 99.99)
+             WHERE id = $2`,
+            [totalIncrement, userId]
+        ));
+    }
+
+    await Promise.all(updatePromises);
+
+    res.json({
+        message: 'SQL-only rule evaluation complete',
+        totalEvaluated: matches.length,
+        matches,
+        missingRuleIds,
+        missingTransactionIds,
+    });
+
+    console.log(`Evaluating rule 2.2 Done`);
 };
 
 

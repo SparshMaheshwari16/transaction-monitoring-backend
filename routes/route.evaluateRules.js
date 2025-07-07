@@ -8,6 +8,7 @@ router.get('/:ruleId/:transactionId', asyncHandler(evaluateRulesController.dryRu
 router.post('/', asyncHandler(evaluateRulesController.evaluateRules));
 router.post('/2', asyncHandler(evaluateRulesController.evaluateRules2));
 router.post('/2.1', asyncHandler(evaluateRulesController.evaluateRules21));
+router.post('/2.2', asyncHandler(evaluateRulesController.evaluateRules22));
 router.post('/3', asyncHandler(evaluateRulesController.evaluateRules3));
 
 module.exports = router;

@@ -23,3 +23,5 @@ CREATE INDEX IF NOT EXISTS idx_rules_rule_id ON rules (id);
 CREATE INDEX IF NOT EXISTS idx_rules_is_active ON rules (is_active);
 
 CREATE INDEX IF NOT EXISTS idx_users_id ON users (id);
+
+CREATE INDEX IF NOT EXISTS idx_behavioral_variables_is_active ON behavioral_variables(is_active);
