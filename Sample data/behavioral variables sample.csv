@@ -1,0 +1,72 @@
+id,variable_name,variable_group,target_table,target_column,sql_template,update_frequency,is_active,created_at,updated_at
+8a9ac1b1-93e7-49a4-a6ba-00e19402662f,avg_amount_30,behavioral,,avg_amount_30,"SELECT AVG(trans_amt) 
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time::date >= NOW()::date - INTERVAL '30 days';",30 day,TRUE,2025-06-18 11:33:06.743048,2025-06-18 11:33:06.743048
+c0680ec3-c1b6-4a63-a026-c05fe64f9038,sum_amount_7,behavioral,,sum_amount_7,"SELECT SUM(trans_amt) 
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time::date >= NOW()::date - INTERVAL '7 days';",7 day,TRUE,2025-06-18 11:33:06.743049,2025-06-18 11:33:06.743049
+706b1f95-922a-4eff-953b-040b8988490d,transaction_count_15,behavioral,,transaction_count_15,"SELECT COUNT(*) 
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time::date >= NOW()::date - INTERVAL '15 days';",15 day,TRUE,2025-06-18 11:33:06.743050,2025-06-18 11:33:06.743050
+dfc01fbf-9d7b-4331-b2ea-d23efe8c5141,unique_counterparties_60,behavioral,,unique_counterparties_60,SELECT COUNT(DISTINCT counterparty_id) FROM transactions WHERE user_id = $USER_ID AND txn_date >= NOW() - INTERVAL '60 days';,60 day,FALSE,2025-06-18 11:33:06.743051,2025-06-18 11:33:06.743051
+d971de9d-95e2-41d7-8679-8f42631c954a,merchant_txn_ratio_30,behavioral,,merchant_txn_ratio_30,"SELECT 100.0 * COUNT(*) FILTER (WHERE is_merchant = TRUE) / NULLIF(COUNT(*), 0) FROM transactions WHERE user_id = $USER_ID AND txn_date >= NOW() - INTERVAL '30 days';",30 day,FALSE,2025-06-18 11:33:06.743052,2025-06-18 11:33:06.743052
+07f28a0b-f4a7-4bb8-a1b6-0cb121c52ac9,high_value_txn_count_90,behavioral,,high_value_txn_count_90,"SELECT COUNT(*) 
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time::date >= NOW()::date - INTERVAL '90 days' AND trans_amt > 100000;",90 day,TRUE,2025-06-18 11:33:06.743053,2025-06-18 11:33:06.743053
+8f2f1b07-7d2c-40bc-9bfc-3c61740735a1,crypto_txn_ratio_30,behavioral,,crypto_txn_ratio_30,"SELECT 100.0 * COUNT(*) FILTER (WHERE origination = 'Crypto Wallet') / NULLIF(COUNT(*), 0)
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time::date >= NOW()::date - INTERVAL '30 days';",30 day,TRUE,2025-06-18 11:33:06.743054,2025-06-18 11:33:06.743054
+d4b67677-c900-4b0b-81bb-6c6862faf72e,night_txn_ratio_30,temporal,,night_txn_ratio_30,"SELECT 100.0 * COUNT(*) FILTER (
+    WHERE EXTRACT(HOUR FROM transaction_time) BETWEEN 0 AND 5
+) / NULLIF(COUNT(*), 0)
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time::date >= NOW()::date - INTERVAL '30 days';",30 day,TRUE,2025-06-18 11:33:06.743055,2025-06-18 11:33:06.743055
+ac6dbc71-478f-4b52-97d7-c0eb9160cbb9,weekday_txn_ratio,temporal,,weekday_txn_ratio,"SELECT 100.0 * COUNT(*) FILTER (
+    WHERE EXTRACT(DOW FROM transaction_time::date) BETWEEN 1 AND 5
+) / NULLIF(COUNT(*), 0)
+FROM transactions 
+WHERE receiver_id = $USER_ID;",7 day,TRUE,2025-06-18 11:33:06.743056,2025-06-18 11:33:06.743056
+339a6525-6152-4743-bab0-996cdf091924,avg_gap_between_txn,temporal,,avg_gap_between_txn,"SELECT AVG(gap_hours) 
+FROM (
+    SELECT EXTRACT(EPOCH FROM transaction_time - LAG(transaction_time) OVER (
+        PARTITION BY receiver_id ORDER BY transaction_time
+    )) / 3600 AS gap_hours
+    FROM transactions 
+    WHERE receiver_id = $USER_ID
+) t;",1 day,TRUE,2025-06-18 11:33:06.743057,2025-06-18 11:33:06.743057
+b1eaeaa3-90c6-4ad4-824e-ec64dd95e9ee,days_since_last_txn,temporal,,days_since_last_txn,"SELECT DATE_PART('day', NOW()::date - MAX(transaction_time::date)) 
+FROM transactions 
+WHERE receiver_id = $USER_ID;",1 day,TRUE,2025-06-18 11:33:06.743058,2025-06-18 11:33:06.743058
+209bf056-a51e-4a85-9f07-7031c5bad247,burst_txn_count_24h,temporal,,burst_txn_count_24h,"SELECT COUNT(*) 
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time >= NOW() - INTERVAL '1 day';",1 day,TRUE,2025-06-18 11:33:06.743059,2025-06-18 11:33:06.743059
+3d37ab52-9739-4caf-bdfd-8a27347854fd,kyc_age_days,risk,,kyc_age_days,"SELECT DATE_PART('day', NOW()::date - kyc_last_updated::date) 
+FROM users 
+WHERE id = $USER_ID;",1 day,TRUE,2025-06-18 11:33:06.743060,2025-06-18 11:33:06.743060
+434c90da-5627-48d7-a788-fcd476bb124b,large_txn_change_ratio,risk,,large_txn_change_ratio,"SELECT 100.0 * (curr.avg_amt - prev.avg_amt) / NULLIF(prev.avg_amt, 0) 
+FROM (
+    SELECT AVG(trans_amt) AS avg_amt 
+    FROM transactions 
+    WHERE receiver_id = $USER_ID 
+      AND transaction_time::date >= DATE_TRUNC('month', CURRENT_DATE)
+) curr,
+(
+    SELECT AVG(trans_amt) AS avg_amt 
+    FROM transactions 
+    WHERE receiver_id = $USER_ID 
+      AND transaction_time::date BETWEEN 
+            DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND 
+            DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '1 day'
+) prev;",1 day,TRUE,2025-06-18 11:33:06.743061,2025-06-18 11:33:06.743061
+83803da0-e620-4c21-bf59-2742f54e2134,geo_diversity_score,risk,,geo_diversity_score,"SELECT COUNT(*) 
+FROM transactions 
+WHERE receiver_id = $USER_ID AND cross_border = TRUE;",1 day,TRUE,2025-06-18 11:33:06.743062,2025-06-18 11:33:06.743062
+c37965e2-cd44-4e49-837d-68c44b237d63,flagged_txn_ratio_30,risk,,flagged_txn_ratio_30,"SELECT 100.0 * COUNT(*) FILTER (WHERE flag IS NOT NULL) / NULLIF(COUNT(*), 0) 
+FROM transactions 
+WHERE receiver_id = $USER_ID AND transaction_time::date >= NOW()::date - INTERVAL '30 days';",30 day,TRUE,2025-06-18 11:33:06.743063,2025-06-18 11:33:06.743063
+58b93088-eca5-4444-9ca7-7dd7da22711d,unusual_channel_count,risk,,unusual_channel_count,SELECT COUNT(*) FROM (SELECT DISTINCT channel FROM transactions WHERE user_id = $USER_ID EXCEPT SELECT DISTINCT channel FROM transactions WHERE user_id = $USER_ID AND txn_date < NOW() - INTERVAL '90 days') t;,1 day,FALSE,2025-06-18 11:33:06.743064,2025-06-18 11:33:06.743064
+763a2e13-a43f-4959-aaff-2491c1edb26a,txn_below_threshold_7,risk,,txn_below_threshold_7,"SELECT COUNT(*) 
+FROM transactions 
+WHERE receiver_id = $USER_ID 
+  AND transaction_time::date >= NOW()::date - INTERVAL '7 days' 
+  AND trans_amt BETWEEN 90000 AND 99999;",7 day,TRUE,2025-06-18 11:33:06.743065,2025-06-18 11:33:06.743065
