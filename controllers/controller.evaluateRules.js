@@ -580,9 +580,6 @@ exports.evaluateRules22 = async (req, res) => {
 
     console.log(`Evaluating rule 2.2 Done`);
 };
-
-
-
 exports.evaluateRules3 = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
