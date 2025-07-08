@@ -60,15 +60,15 @@ CREATE TABLE transactions (
 CREATE TABLE user_transaction_summary (
     user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     
-    sum_transaction_15d NUMERIC(12,2) NOT NULL DEFAULT 0,
-    sum_transaction_30d NUMERIC(12,2) NOT NULL DEFAULT 0,
-    sum_transaction_60d NUMERIC(12,2) NOT NULL DEFAULT 0,
-    sum_transaction_90d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    sum_trans_amount_15d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    sum_trans_amount_30d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    sum_trans_amount_60d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    sum_trans_amount_90d NUMERIC(12,2) NOT NULL DEFAULT 0,
     
-    avg_transaction_15d NUMERIC(12,2) NOT NULL DEFAULT 0,
-    avg_transaction_30d NUMERIC(12,2) NOT NULL DEFAULT 0,
-    avg_transaction_60d NUMERIC(12,2) NOT NULL DEFAULT 0,
-    avg_transaction_90d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    avg_trans_amount_15d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    avg_trans_amount_30d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    avg_trans_amount_60d NUMERIC(12,2) NOT NULL DEFAULT 0,
+    avg_trans_amount_90d NUMERIC(12,2) NOT NULL DEFAULT 0,
     
     trans_count_15d INT NOT NULL DEFAULT 0,
     trans_count_30d INT NOT NULL DEFAULT 0,
