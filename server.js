@@ -35,12 +35,6 @@ app.use('/api/users', ipWhitelist, authenticateApiKey, userRoutes);
 // /evaluate
 app.use('/api/evaluateRule', ipWhitelist, authenticateApiKey, evaluateRulesRoutes);
 
-// /user_transaction_summary
-app.use('/api/user_trans_sum', ipWhitelist, authenticateApiKey, userTransSumRoutes)
-
-// /user_transaction_summary
-app.use('/api/behavioral-variable', ipWhitelist, authenticateApiKey, behavioralVariableRoutes)
-
 app.use((err, req, res, next) => {
     // console.error(err.stack);
     // if (err.message === 'Invalid JSON') {
@@ -60,6 +54,9 @@ app.use((err, req, res, next) => {
 app.use((req, res) => {
     res.status(404).send('Page not found');
 });
+
+// Import and start cron job
+require('./cron/cron.test.js');
 
 // Start server
 app.listen(PORT, () => {
