@@ -35,6 +35,12 @@ app.use('/api/users', ipWhitelist, authenticateApiKey, userRoutes);
 // /evaluate
 app.use('/api/evaluateRule', ipWhitelist, authenticateApiKey, evaluateRulesRoutes);
 
+// //behavioral-variable
+app.use('/api/behavioral-variable', ipWhitelist, authenticateApiKey, behavioralVariableRoutes);
+
+// /user_transaction_summary
+app.use('/api/user_trans_sum', ipWhitelist, authenticateApiKey, userTransSumRoutes);
+
 app.use((err, req, res, next) => {
     // console.error(err.stack);
     // if (err.message === 'Invalid JSON') {

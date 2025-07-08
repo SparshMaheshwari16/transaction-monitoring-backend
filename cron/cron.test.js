@@ -1,9 +1,16 @@
 // cron/monthlyTask.js
 const cron = require('node-cron');
-const { testing } = require('../controllers/controller.cronTest');
+const { evaluateRule } = require('../controllers/controller.cronTest');
+const asyncHandler = require('../utils/util.asyncHandler');
 
-// Cron pattern
-cron.schedule('* * * * *', () => {
-    console.log('Running task', new Date().toISOString());
-    testing();
-});
+// Cron job: runs every 6 hr 
+// To
+// 1. Reset flag
+// 2. Reset risk score
+// 3. Evaluate Transactions
+
+const schedule = process.env.TRANSACTION_EVALUATE || '0 */6 * * *';
+cron.schedule(schedule, asyncHandler(async () => {
+    console.log('Evaluating transaction task started at:', new Date().toString());
+    await evaluateRule();
+}));
