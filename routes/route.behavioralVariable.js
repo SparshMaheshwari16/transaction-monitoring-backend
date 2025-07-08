@@ -4,6 +4,7 @@ const router = express.Router();
 const behaVarController = require('../controllers/controller.behavioralVariable');
 const asyncHandler = require('../utils/util.asyncHandler');
 
-router.get('/', asyncHandler(behaVarController.test));
+router.get('/', asyncHandler(behaVarController.getAll));
+router.get('/test', asyncHandler(behaVarController.test));
 
 module.exports = router;
