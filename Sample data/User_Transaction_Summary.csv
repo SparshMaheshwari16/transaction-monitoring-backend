@@ -1,4 +1,4 @@
-user_id,sum_15d,sum_30d,sum_60d,sum_90d,avg_15d,avg_30d,avg_60d,avg_90d,trans_count_15d,trans_count_30d,trans_count_60d,trans_count_90d,last_updated
+user_id,sum_trans_amount_15d,sum_trans_amount_30d,sum_trans_amount_60d,sum_trans_amount_90d,avg_trans_amount_15d,avg_trans_amount_30d,avg_trans_amount_60d,avg_trans_amount_90d,trans_count_15d,trans_count_30d,trans_count_60d,trans_count_90d,last_updated
 e7b8c106-7b1c-4033-ba62-415e50aa73fa,5917.71,19864.42,169957.4,189573.4,6696.96,9288.24,3308.24,9063.42,38,88,106,133,2025-06-18 11:33:06.743048
 ea7b464d-61dc-4a88-8d9d-abf9a8f2af3b,50124.83,125043.08,148243.6,77360.15,5395.44,7506.82,2110.71,891.46,2,15,59,154,2025-06-18 11:33:06.743076
 246d2491-d37f-408e-9b62-af88d9dcb052,88046.91,5317.92,143804.03,72269.54,8128.21,9872.71,3609.3,5507.22,47,90,92,81,2025-06-18 11:33:06.743094

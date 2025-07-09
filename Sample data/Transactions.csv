@@ -1,4 +1,4 @@
-id,age,trans_amt,new_trans,sex,nationality,receiver_id,occupation,balance,origination,cross_border,transaction_time,pep_status,flag,flagged_by_rule
+id,age,trans_amt,new_trans,sex,nationality,receiver_id,occupation,balance,origination,cross_border,trans_time,pep_status,flag,flagged_by_rule
 9a6433ad-fa5a-40f7-8c9e-a8bfb4f7ed94,53,581578,TRUE,Female,Canada,9e77f82b-dcb0-4efd-b2e7-337cde33647e,Teacher,49914,Call Center,TRUE,2025-05-28 17:21:31.738496,TRUE,,
 2fab81cb-1954-472d-8280-0d6489debf33,30,836386,FALSE,Other,UK,ad6fd9ce-cf52-401a-aec5-5e4110077aaf,Doctor,23975,Crypto Wallet,FALSE,2025-03-05 20:04:09.738496,FALSE,,
 56000d62-d585-4234-995f-135189e0efc5,35,733504,TRUE,Male,Germany,f1f6e275-9a5b-4fca-b265-079618d5e082,Teacher,71203,Call Center,TRUE,2025-03-20 03:03:12.738496,TRUE,,
