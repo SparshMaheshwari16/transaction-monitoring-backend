@@ -79,7 +79,7 @@ CREATE TABLE user_transaction_summary (
 );
 
 
-CREATE TABLE behavioral_variables (
+CREATE TABLE behavioral_variables_definitions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     variable_name TEXT UNIQUE NOT NULL,       -- e.g. 'avg_amount_30d'
