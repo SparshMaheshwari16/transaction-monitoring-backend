@@ -1,4 +1,3 @@
-const pool = require('../db'); // Adjust the path to your db connection
 const transactionService = require('../services/service.transaction');
 const ApiError = require('../utils/util.ApiError');
 
