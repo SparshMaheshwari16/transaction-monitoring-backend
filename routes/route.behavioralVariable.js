@@ -1,10 +1,12 @@
 // routes/evaluateRules.js
 const express = require('express');
 const router = express.Router();
-const behaVarController = require('../controllers/controller.behavioralVariable');
+const behavioralVariableController = require('../controllers/controller.behavioralVariable');
 const asyncHandler = require('../utils/util.asyncHandler');
 
-router.get('/', asyncHandler(behaVarController.getAll));
-router.get('/test', asyncHandler(behaVarController.test));
+router.get('/', asyncHandler(behavioralVariableController.getAll));
+router.get('/update', asyncHandler(behavioralVariableController.updateAllActiveVariables));
+
+router.get('/test', asyncHandler(behavioralVariableController.test));
 
 module.exports = router;

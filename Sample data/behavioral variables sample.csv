@@ -1,59 +1,59 @@
 id,variable_name,variable_group,target_table,target_column,sql_template,update_frequency,is_active,created_at,updated_at
-8a9ac1b1-93e7-49a4-a6ba-00e19402662f,avg_amount_30,behavioral,user_transaction_summary,avg_amount_30,"SELECT 
+8a9ac1b1-93e7-49a4-a6ba-00e19402662f,avg_trans_amount_30d,behavioral,user_transaction_summary,avg_trans_amount_30d,"SELECT 
   receiver_id AS user_id, 
   AVG(trans_amt) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '30 days'
-GROUP BY receiver_id;",30 day,TRUE,2025-06-18 11:33:06.743048,2025-06-18 11:33:06.743048
-c0680ec3-c1b6-4a63-a026-c05fe64f9038,sum_amount_7,behavioral,user_transaction_summary,sum_amount_7,"SELECT 
+GROUP BY receiver_id",30 day,TRUE,2025-06-18 11:33:06.743048,2025-06-18 11:33:06.743048
+c0680ec3-c1b6-4a63-a026-c05fe64f9038,sum_trans_amount_15d,behavioral,user_transaction_summary,sum_trans_amount_15d,"SELECT 
   receiver_id AS user_id, 
   SUM(trans_amt) AS value
 FROM transactions
-WHERE trans_time >= NOW() - INTERVAL '7 days'
-GROUP BY receiver_id;",7 day,TRUE,2025-06-18 11:33:06.743049,2025-06-18 11:33:06.743049
-706b1f95-922a-4eff-953b-040b8988490d,transaction_count_15,behavioral,user_transaction_summary,transaction_count_15,"SELECT 
+WHERE trans_time >= NOW() - INTERVAL '15 days'
+GROUP BY receiver_id",15 day,TRUE,2025-06-18 11:33:06.743049,2025-06-18 11:33:06.743049
+706b1f95-922a-4eff-953b-040b8988490d,trans_count_15d,behavioral,user_transaction_summary,trans_count_15d,"SELECT 
   receiver_id AS user_id, 
   COUNT(*) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '15 days'
-GROUP BY receiver_id;",15 day,TRUE,2025-06-18 11:33:06.743050,2025-06-18 11:33:06.743050
-dfc01fbf-9d7b-4331-b2ea-d23efe8c5141,unique_counterparties_60,behavioral,user_transaction_summary,unique_counterparties_60,"SELECT 
+GROUP BY receiver_id",15 day,TRUE,2025-06-18 11:33:06.743050,2025-06-18 11:33:06.743050
+dfc01fbf-9d7b-4331-b2ea-d23efe8c5141,unique_counterparties_60d,behavioral,user_transaction_summary,unique_counterparties_60d,"SELECT 
   receiver_id AS user_id, 
   COUNT(DISTINCT counterparty_id) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '60 days'
-GROUP BY receiver_id;",60 day,FALSE,2025-06-18 11:33:06.743051,2025-06-18 11:33:06.743051
-d971de9d-95e2-41d7-8679-8f42631c954a,merchant_txn_ratio_30,behavioral,user_transaction_summary,merchant_txn_ratio_30,"SELECT 
+GROUP BY receiver_id",60 day,FALSE,2025-06-18 11:33:06.743051,2025-06-18 11:33:06.743051
+d971de9d-95e2-41d7-8679-8f42631c954a,merchant_trans_ratio_30d,behavioral,user_transaction_summary,merchant_trans_ratio_30d,"SELECT 
   receiver_id AS user_id,
   100.0 * COUNT(*) FILTER (WHERE is_merchant = TRUE) / NULLIF(COUNT(*), 0) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '30 days'
-GROUP BY receiver_id;",30 day,FALSE,2025-06-18 11:33:06.743052,2025-06-18 11:33:06.743052
-07f28a0b-f4a7-4bb8-a1b6-0cb121c52ac9,high_value_txn_count_90,behavioral,user_transaction_summary,high_value_txn_count_90,"SELECT 
+GROUP BY receiver_id",30 day,FALSE,2025-06-18 11:33:06.743052,2025-06-18 11:33:06.743052
+07f28a0b-f4a7-4bb8-a1b6-0cb121c52ac9,high_value_trans_count_90d,behavioral,user_transaction_summary,high_value_trans_count_90d,"SELECT 
   receiver_id AS user_id, 
   COUNT(*) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '90 days'
 AND trans_amt > 100000
-GROUP BY receiver_id;",90 day,TRUE,2025-06-18 11:33:06.743053,2025-06-18 11:33:06.743053
-8f2f1b07-7d2c-40bc-9bfc-3c61740735a1,crypto_txn_ratio_30,behavioral,user_transaction_summary,crypto_txn_ratio_30,"SELECT 
+GROUP BY receiver_id",90 day,TRUE,2025-06-18 11:33:06.743053,2025-06-18 11:33:06.743053
+8f2f1b07-7d2c-40bc-9bfc-3c61740735a1,crypto_trans_ratio_30d,behavioral,user_transaction_summary,crypto_trans_ratio_30d,"SELECT 
   receiver_id AS user_id,
   100.0 * COUNT(*) FILTER (WHERE origination = 'Crypto Wallet') / NULLIF(COUNT(*), 0) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '30 days'
-GROUP BY receiver_id;",30 day,TRUE,2025-06-18 11:33:06.743054,2025-06-18 11:33:06.743054
-d4b67677-c900-4b0b-81bb-6c6862faf72e,night_txn_ratio_30,temporal,user_transaction_summary,night_txn_ratio_30,"SELECT 
+GROUP BY receiver_id",30 day,TRUE,2025-06-18 11:33:06.743054,2025-06-18 11:33:06.743054
+d4b67677-c900-4b0b-81bb-6c6862faf72e,night_trans_ratio_30d,temporal,user_transaction_summary,night_trans_ratio_30d,"SELECT 
   receiver_id AS user_id,
   100.0 * COUNT(*) FILTER (WHERE EXTRACT(HOUR FROM trans_time) BETWEEN 0 AND 5) / NULLIF(COUNT(*), 0) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '30 days'
-GROUP BY receiver_id;",30 day,TRUE,2025-06-18 11:33:06.743055,2025-06-18 11:33:06.743055
-ac6dbc71-478f-4b52-97d7-c0eb9160cbb9,weekday_txn_ratio,temporal,user_transaction_summary,weekday_txn_ratio,"SELECT 
+GROUP BY receiver_id",30 day,TRUE,2025-06-18 11:33:06.743055,2025-06-18 11:33:06.743055
+ac6dbc71-478f-4b52-97d7-c0eb9160cbb9,weekday_trans_ratio,temporal,user_transaction_summary,weekday_trans_ratio,"SELECT 
   receiver_id AS user_id,
   100.0 * COUNT(*) FILTER (WHERE EXTRACT(DOW FROM trans_time) BETWEEN 1 AND 5) / NULLIF(COUNT(*), 0) AS value
 FROM transactions
-GROUP BY receiver_id;",7 day,TRUE,2025-06-18 11:33:06.743056,2025-06-18 11:33:06.743056
-339a6525-6152-4743-bab0-996cdf091924,avg_gap_between_txn,temporal,user_transaction_summary,avg_gap_between_txn,"SELECT 
+GROUP BY receiver_id",7 day,TRUE,2025-06-18 11:33:06.743056,2025-06-18 11:33:06.743056
+339a6525-6152-4743-bab0-996cdf091924,avg_gap_between_trans,temporal,user_transaction_summary,avg_gap_between_trans,"SELECT 
   user_id,
   AVG(gap_hours) AS value
 FROM (
@@ -63,23 +63,23 @@ FROM (
     FROM transactions
 ) sub
 WHERE gap_hours IS NOT NULL
-GROUP BY user_id;",1 day,TRUE,2025-06-18 11:33:06.743057,2025-06-18 11:33:06.743057
-b1eaeaa3-90c6-4ad4-824e-ec64dd95e9ee,days_since_last_txn,temporal,user_transaction_summary,days_since_last_txn,"SELECT 
+GROUP BY user_id",1 day,TRUE,2025-06-18 11:33:06.743057,2025-06-18 11:33:06.743057
+b1eaeaa3-90c6-4ad4-824e-ec64dd95e9ee,days_since_last_trans,temporal,user_transaction_summary,days_since_last_trans,"SELECT 
   receiver_id AS user_id, 
-  COALESCE(EXTRACT(DAY FROM AGE(NOW()::date, MAX(trans_time::date))), NULL) AS days_since_last_transaction
+  COALESCE(EXTRACT(DAY FROM AGE(NOW()::date, MAX(trans_time::date))), NULL) AS value
 FROM transactions
-GROUP BY receiver_id;",1 day,TRUE,2025-06-18 11:33:06.743058,2025-06-18 11:33:06.743058
-209bf056-a51e-4a85-9f07-7031c5bad247,burst_txn_count_24h,temporal,user_transaction_summary,burst_txn_count_24h,"SELECT 
+GROUP BY receiver_id",1 day,TRUE,2025-06-18 11:33:06.743058,2025-06-18 11:33:06.743058
+209bf056-a51e-4a85-9f07-7031c5bad247,burst_trans_count_24h,temporal,user_transaction_summary,burst_trans_count_24h,"SELECT 
   receiver_id AS user_id, 
   COUNT(*) AS value
 FROM transactions
 WHERE trans_time >= NOW() - INTERVAL '1 day'
-GROUP BY receiver_id;",1 day,TRUE,2025-06-18 11:33:06.743059,2025-06-18 11:33:06.743059
+GROUP BY receiver_id",1 day,TRUE,2025-06-18 11:33:06.743059,2025-06-18 11:33:06.743059
 3d37ab52-9739-4caf-bdfd-8a27347854fd,kyc_age_days,risk,user_transaction_summary,kyc_age_days,"SELECT 
   id AS user_id, 
   DATE_PART('day', NOW() - kyc_last_updated) AS value
-FROM users;",1 day,TRUE,2025-06-18 11:33:06.743060,2025-06-18 11:33:06.743060
-434c90da-5627-48d7-a788-fcd476bb124b,large_txn_change_ratio,risk,user_transaction_summary,large_txn_change_ratio,"SELECT 
+FROM users",1 day,TRUE,2025-06-18 11:33:06.743060,2025-06-18 11:33:06.743060
+434c90da-5627-48d7-a788-fcd476bb124b,large_trans_change_ratio,risk,user_transaction_summary,large_trans_change_ratio,"SELECT 
   curr.receiver_id AS user_id,
   100.0 * (curr.avg_amt - prev.avg_amt) / NULLIF(prev.avg_amt, 0) AS value
 FROM (
@@ -94,19 +94,19 @@ JOIN (
     WHERE trans_time BETWEEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') 
                         AND DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '1 day'
     GROUP BY receiver_id
-) prev ON curr.receiver_id = prev.receiver_id;",1 day,TRUE,2025-06-18 11:33:06.743061,2025-06-18 11:33:06.743061
+) prev ON curr.receiver_id = prev.receiver_id",1 day,TRUE,2025-06-18 11:33:06.743061,2025-06-18 11:33:06.743061
 83803da0-e620-4c21-bf59-2742f54e2134,geo_diversity_score,risk,user_transaction_summary,geo_diversity_score,"SELECT 
   receiver_id AS user_id, 
   COUNT(DISTINCT country) AS value
 FROM transactions
 WHERE cross_border = TRUE
-GROUP BY receiver_id;",1 day,FALSE,2025-06-18 11:33:06.743062,2025-06-18 11:33:06.743062
-c37965e2-cd44-4e49-837d-68c44b237d63,flagged_txn_ratio_30,risk,user_transaction_summary,flagged_txn_ratio_30,"SELECT 
-  receiver_id,
-  100.0 * COUNT(*) FILTER (WHERE flag IS NOT NULL) / NULLIF(COUNT(*), 0) AS flagged_txn_ratio_30
+GROUP BY receiver_id",1 day,FALSE,2025-06-18 11:33:06.743062,2025-06-18 11:33:06.743062
+c37965e2-cd44-4e49-837d-68c44b237d63,flagged_trans_ratio_30d,risk,user_transaction_summary,flagged_trans_ratio_30d,"SELECT 
+  receiver_id AS user_id,
+  100.0 * COUNT(*) FILTER (WHERE flag IS NOT NULL) / NULLIF(COUNT(*), 0) AS value
 FROM transactions
 WHERE trans_time::date >= NOW()::date - INTERVAL '30 days'
-GROUP BY receiver_id;",30 day,TRUE,2025-06-18 11:33:06.743063,2025-06-18 11:33:06.743063
+GROUP BY receiver_id",30 day,TRUE,2025-06-18 11:33:06.743063,2025-06-18 11:33:06.743063
 58b93088-eca5-4444-9ca7-7dd7da22711d,unusual_channel_count,risk,user_transaction_summary,unusual_channel_count,"WITH recent_channels AS (
   SELECT receiver_id, channel
   FROM transactions
@@ -126,11 +126,11 @@ new_channels AS (
 )
 SELECT receiver_id, COUNT(DISTINCT channel) AS unusual_channel_count
 FROM new_channels
-GROUP BY receiver_id;",1 day,FALSE,2025-06-18 11:33:06.743064,2025-06-18 11:33:06.743064
-763a2e13-a43f-4959-aaff-2491c1edb26a,txn_below_threshold_7,risk,user_transaction_summary,txn_below_threshold_7,"SELECT 
-  receiver_id,
-  COUNT(*) AS txn_below_threshold_7
+GROUP BY receiver_id",1 day,FALSE,2025-06-18 11:33:06.743064,2025-06-18 11:33:06.743064
+763a2e13-a43f-4959-aaff-2491c1edb26a,trans_below_threshold_7d,risk,user_transaction_summary,trans_below_threshold_7d,"SELECT 
+  receiver_id AS user_id,
+  COUNT(*) AS value
 FROM transactions
 WHERE trans_time::date >= NOW()::date - INTERVAL '7 days'
   AND trans_amt BETWEEN 90000 AND 99999
-GROUP BY receiver_id;",7 day,TRUE,2025-06-18 11:33:06.743065,2025-06-18 11:33:06.743065
+GROUP BY receiver_id",7 day,TRUE,2025-06-18 11:33:06.743065,2025-06-18 11:33:06.743065
