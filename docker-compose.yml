@@ -13,9 +13,16 @@ services:
       - redis
     environment:
       - BASE_URL=http://app:3000   # overrides .env
+      - REDIS_URL=redis://redis:6379
 
   redis:
-    image: redis/redis-stack:latest
+    # Redis with GUI
+    # image: redis/redis-stack:latest
+    
+    # Only Redis (Without GUI) i 
+    image: redis:7-alpine
     container_name: trans-redis
     ports:
       - "6379:6379"
+      # Optional GUI port (only needed if using redis-stack)
+      # - "8001:8001"

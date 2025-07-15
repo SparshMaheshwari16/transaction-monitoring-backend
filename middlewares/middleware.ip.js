@@ -5,6 +5,7 @@ const allowedIPs = [
     '127.0.0.1',       // localhost IPv4
     '::ffff:127.0.0.1',// sometimes Express formats it like this
     '::ffff:172.18.0.1',   // Docker gateway IP
+    '::ffff:172.17.0.1',   // Docker gateway IP
     // 'xx.xx.xx.xx',   // Add your real server/public IPs here
 ];
 
