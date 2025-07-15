@@ -7,3 +7,10 @@ node_modules/
 # Editor directories and files
 .vscode/
 
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
