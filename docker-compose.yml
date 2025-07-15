@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: trans-monitoring-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    environment:
+      - BASE_URL=http://app:3000   # overrides .env
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: trans-redis
+    ports:
+      - "6379:6379"
