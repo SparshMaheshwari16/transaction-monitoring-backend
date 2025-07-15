@@ -18,7 +18,7 @@ const evaluateRulesRoutes = require('./routes/route.evaluateRules.js');
 const userTransSumRoutes = require('./routes/route.userTransactionSummary.js');
 const behavioralVariableRoutes = require('./routes/route.behavioralVariable.js');
 
-const ipWhitelist = require('./middlewares/middleware.ipWhiteList.js');
+const ipWhitelist = require('./middlewares/middleware.ip.js');
 const authenticateApiKey = require('./middlewares/middleware.auth.js');
 
 const evaluateRules = require('./services/ruleEvaluator.js');
