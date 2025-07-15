@@ -1,7 +1,7 @@
 const { createClient } = require('redis');
 
 const redis = createClient({
-    url: process.env.REDISURL,
+    url: process.env.REDIS_URL,
     socket: {
         connectTimeout: 200,      // timeout for initial connection (ms)
         reconnectStrategy: () => 2000, // retry every 2 seconds if disconnected
