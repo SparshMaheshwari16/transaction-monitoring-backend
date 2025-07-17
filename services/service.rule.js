@@ -34,7 +34,7 @@ module.exports.getAllActiveRules = async () => {
     
     // Store in Redis for 6 hr
 
-    await redisHelper.setCache('rules:active', activeRules, { EX: 21600 });
+    await redisHelper.setCache('rules:active', activeRules, 21600);
 
     return activeRules;
 };
