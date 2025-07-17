@@ -43,12 +43,27 @@ module.exports.createRule = async (name, condition, flag_level, risk_increment) 
         [name, condition, flag_level, risk_increment]
     );
 
-    return result.rows[0]; // newly created rule
+    const newRule = result.rows[0];
+
+    // Update Redis cache
+    if (newRule) {
+        await redisHelper.setHash('rules:byId', newRule.id, newRule, 21600);
+    }
+
+    return newRule; // newly created rule
 };
 
 module.exports.deleteRule = async (id) => {
     const result = await pool.query('DELETE FROM rules WHERE id = $1 RETURNING *', [id]);
-    return result.rows[0]; // return deleted rule or undefined if not found
+
+    const deletedRule = result.rows[0];
+
+    if (deletedRule) {
+        // Only remove the specific field from the Redis hash
+        await redisHelper.deleteHashField('rules:byId', id.toString());
+    }
+
+    return deletedRule; // return deleted rule or undefined if not found
 };
 
 module.exports.updateRule = async (id, name, condition, flag_level, risk_increment) => {
@@ -57,7 +72,14 @@ module.exports.updateRule = async (id, name, condition, flag_level, risk_increme
         [name, condition, flag_level, risk_increment, id]
     );
 
-    return result.rows[0]; // updated rule or undefined if not found
+    const updatedRule = result.rows[0];
+
+    if (updatedRule) {
+        // Update only the specific field in the hash
+        await redisHelper.setHash('rules:byId', updatedRule.id, updatedRule, 21600);
+    }
+
+    return updatedRule; // updated rule or undefined if not found
 }
 module.exports.toggleActiveRule = async (id) => {
     const result = await pool.query('UPDATE rules SET is_active = NOT is_active WHERE id = $1 RETURNING *', [id]);
