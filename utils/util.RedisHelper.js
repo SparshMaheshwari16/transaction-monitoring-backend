@@ -63,7 +63,7 @@ async function setHash(key, field, value, ttlSeconds = 21600) {
   }
 }
 
-async function getHash(key, field) {
+async function getHashField(key, field) {
   if (!isRedisConnected()) return null;
   try {
     const val = await redis.hGet(key, field);
@@ -110,4 +110,4 @@ async function clearRedisCache() {
   }
 }
 
-module.exports = { getCache, setCache, deleteCache, setHash, getHash, getHashAll, clearRedisCache, deleteHashField };
+module.exports = { getCache, setCache, deleteCache, setHash, getHashField, getHashAll, clearRedisCache, deleteHashField };
