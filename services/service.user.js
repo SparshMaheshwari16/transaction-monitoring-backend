@@ -16,9 +16,9 @@ module.exports.getAllUser = async () => {
     // Step 2: Fallback to DB if no cache or Redis failed
     const result = await pool.query('SELECT * FROM users');
 
-    // Step 3: Store in Redis for 30 mins (1800 seconds)
+    // Step 3: Store in Redis for 6 hr (21600 seconds)
 
-    await redisHelper.setCache(CACHE_KEY, result.rows, 1800);
+    await redisHelper.setCache(CACHE_KEY, result.rows, 21600);
 
     return result.rows;
 };
