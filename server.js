@@ -21,8 +21,6 @@ const behavioralVariableRoutes = require('./routes/route.behavioralVariable.js')
 const ipWhitelist = require('./middlewares/middleware.ip.js');
 const authenticateApiKey = require('./middlewares/middleware.auth.js');
 
-const evaluateRules = require('./services/ruleEvaluator.js');
-
 // /transactions
 app.use('/api/transactions', ipWhitelist, authenticateApiKey, transactionRoutes);
 
