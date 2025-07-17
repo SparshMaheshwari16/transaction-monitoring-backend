@@ -42,6 +42,16 @@ async function deleteCache(key) {
     console.error(`Redis DEL error for key "${key}":`, err.message);
   }
 }
+
+async function deleteHashField(key, field) {
+  if (!isRedisConnected()) return null;
+  try {
+    await redis.hDel(key, field);
+  } catch (err) {
+    console.error(`Redis HDEL error for key "${key}", field "${field}":`, err.message);
+  }
+}
+
 // 21600 = 6 hr
 async function setHash(key, field, value, ttlSeconds = 21600) {
   if (!isRedisConnected()) return null;
@@ -100,4 +110,4 @@ async function clearRedisCache() {
   }
 }
 
-module.exports = { getCache, setCache, deleteCache, setHash, getHash, getHashAll, clearRedisCache };
+module.exports = { getCache, setCache, deleteCache, setHash, getHash, getHashAll, clearRedisCache, deleteHashField };
