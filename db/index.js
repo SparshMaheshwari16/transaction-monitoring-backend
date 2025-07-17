@@ -8,6 +8,12 @@ const pool = new Pool({
   },
 });
 
+// Handle idle client disconnection errors
+pool.on('error', (err) => {
+  console.error('PG Pool error:', err.message || err);
+  console.log(`From db/index.js`);
+});
+
 // Optional: Test the connection immediately
 pool.connect((err, client, release) => {
   if (err) {
