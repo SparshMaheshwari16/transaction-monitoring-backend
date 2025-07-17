@@ -22,16 +22,43 @@ module.exports.getAllRules = async () => {
     return result.rows;
 };
 module.exports.getAllActiveRules = async () => {
+    // Try cache
+    let activeRules = await redisHelper.getCache('rules:active');
+
+    if (activeRules) {
+        console.log('Returning all active rules from Redis cache');
+        return activeRules;
+    }
     const result = await pool.query('SELECT * FROM rules WHERE is_active=true');
-    return result.rows;
+    activeRules = result.rows
+    
+    // Store in Redis for 6 hr
+
+    await redisHelper.setCache('rules:active', activeRules, { EX: 21600 });
+
+    return activeRules;
 };
 module.exports.getAllInactiveRules = async () => {
     const result = await pool.query('SELECT * FROM rules WHERE is_active=false');
     return result.rows;
 };
 module.exports.getRuleById = async (id) => {
+    // Try cache 
+    const rule = await redisHelper.getHashField('rules:byId', id);
+
+    if (rule) {
+        console.log('Returning rule by id from Redis cache');
+        return rule;
+    }
+
     const result = await pool.query('SELECT * FROM rules WHERE id = $1', [id]);
-    return result.rows[0]; // return first row or undefined if not found
+
+    const dbRule = result.rows[0];
+    // Cache the result if found
+    if (dbRule) {
+        await redisHelper.setHash('rules:byId', dbRule.id, dbRule, 21600);
+    }
+    return dbRule; // return first row or undefined if not found
 };
 module.exports.getRulesByIds = async (ids) => {
     const result = await pool.query('SELECT * FROM rules WHERE id=ANY($1)', [ids]);
