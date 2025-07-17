@@ -4,7 +4,7 @@ const userTransactionSummaryService = require('../services/service.userTransacti
 const ApiError = require('../utils/util.ApiError');
 
 exports.getAllUserTransactionSummary = async (req, res) => {
-    const result = await userTransactionSummaryService.getAll();
+    const result = await userTransactionSummaryService.getAllUserTransactionSummary();
 
     if (!result || result.length === 0) {
         throw new ApiError(404, 'No data found');
@@ -21,7 +21,7 @@ exports.getUserTransactionSummaryById = async (req, res) => {
         throw new ApiError(400, 'User ID is required');
     }
 
-    const result = await userTransactionSummaryService.getById(userId);
+    const result = await userTransactionSummaryService.getUserTransactionSummaryById(userId);
     if (!result) {
         return res.status(404).json({ error: 'User id not found' });
     }
