@@ -35,6 +35,8 @@ async function clearRedisCache() {
         // Clear all Redis data
         await redis.flushAll();
         console.log("Redis cache cleared successfully!");
+        console.log('*-*-*-*-*-*-*-*-*-*-');
+
     } catch (err) {
         console.error('Error clearing Redis cache on startup:', err);
     }
@@ -46,6 +48,9 @@ async function clearRedisCache() {
         console.log('Redis connectedd');
         await clearRedisCache();
         
+        const warmupCache = require('./util.cacheWarmup');
+        // Cache Warmup
+        await warmupCache();    
     } catch (err) {
         console.error('Redis connection failed:', err);
     }
