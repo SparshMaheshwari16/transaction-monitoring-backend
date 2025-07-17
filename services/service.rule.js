@@ -1,8 +1,24 @@
 // services/rulesService.js
 const pool = require('../db'); // adjust this if your pool is elsewhere
+const redisHelper = require('../utils/util.RedisHelper');
 
 module.exports.getAllRules = async () => {
+    // Try cache first
+    const allRules = await redisHelper.getHashAll('rules:byId');
+
+    if (allRules) {
+        console.log('Returning rules from Redis cache');
+        return allRules;
+    }
+
+    // Fallback to DB if no cache or Redis failed
+
     const result = await pool.query('SELECT * FROM rules');
+
+    // Store in Redis for 6 hr
+    for (const rule of result.rows) {
+        await redisHelper.setHash('rules:byId', rule.id, rule, 21600);
+    }
     return result.rows;
 };
 module.exports.getAllActiveRules = async () => {
