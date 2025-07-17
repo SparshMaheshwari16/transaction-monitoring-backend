@@ -8,13 +8,16 @@ async function warmupCache() {
         console.log('Starting cache warmup...');
 
         await ruleService.getAllRules();
-        console.log('Rules cached');
+        // console.log('Rules cached');
+        
+        await ruleService.getAllActiveRules();
+        // console.log(`Active rules cached`);
 
         await userTransactionService.getAllUserTransactionSummary();
-        console.log('User transaction summaries cached');
+        // console.log('User transaction summaries cached');
 
         await userService.getAllUser();
-        console.log('Users cached');
+        // console.log('Users cached');
 
         console.log('Cache warmup complete!');
     } catch (err) {

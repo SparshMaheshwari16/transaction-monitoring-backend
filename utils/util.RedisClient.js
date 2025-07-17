@@ -50,7 +50,8 @@ async function clearRedisCache() {
         
         const warmupCache = require('./util.cacheWarmup');
         // Cache Warmup
-        await warmupCache();    
+        await warmupCache();
+        console.log('*-*-*-*-*-*-*-*-*-*-');
     } catch (err) {
         console.error('Redis connection failed:', err);
     }
