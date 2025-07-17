@@ -3,7 +3,7 @@ const { subDays } = require('date-fns');
 const userTransactionSummaryService = require('../services/service.userTransactionSummary');
 const ApiError = require('../utils/util.ApiError');
 
-exports.getAll = async (req, res) => {
+exports.getAllUserTransactionSummary = async (req, res) => {
     const result = await userTransactionSummaryService.getAll();
 
     if (!result || result.length === 0) {
@@ -15,7 +15,7 @@ exports.getAll = async (req, res) => {
         data: result
     });
 }
-exports.getById = async (req, res) => {
+exports.getUserTransactionSummaryById = async (req, res) => {
     const userId = req.params.id;
     if (!userId) {
         throw new ApiError(400, 'User ID is required');

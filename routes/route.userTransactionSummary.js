@@ -4,8 +4,8 @@ const userTransactionSummaryController = require('../controllers/controller.user
 const asyncHandler = require('../utils/util.asyncHandler');
 
 // router.get('/', userTransactionSummaryController.test);
-router.get('/',  asyncHandler(userTransactionSummaryController.getAll));
-router.get('/:id',  asyncHandler(userTransactionSummaryController.getById));
+router.get('/',  asyncHandler(userTransactionSummaryController.getAllUserTransactionSummary));
+router.get('/:id',  asyncHandler(userTransactionSummaryController.getUserTransactionSummaryById));
 
 
 
