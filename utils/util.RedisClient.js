@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 const { createClient } = require('redis');
 
 const redis = createClient({
@@ -13,7 +14,7 @@ const redis = createClient({
 let isRedisConnected = false;
 
 redis.on('connect', () => {
-    console.log('Redis connected');
+    // console.log('Redis connected');
     isRedisConnected = true;
 });
 
@@ -27,10 +28,24 @@ redis.on('error', (err) => {
     isRedisConnected = false;
 });
 
+async function clearRedisCache() {
+    try {
+        console.log("Clearing cache...");
+
+        // Clear all Redis data
+        await redis.flushAll();
+        console.log("Redis cache cleared successfully!");
+    } catch (err) {
+        console.error('Error clearing Redis cache on startup:', err);
+    }
+}
+
 (async () => {
     try {
         await redis.connect();
-        console.log('Redis connected');
+        console.log('Redis connectedd');
+        await clearRedisCache();
+        
     } catch (err) {
         console.error('Redis connection failed:', err);
     }
