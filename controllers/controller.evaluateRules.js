@@ -56,6 +56,7 @@ exports.dryRunARuleOnATransaction = async (req, res) => {
     });
 };
 
+// Basic evalutaion using 2 loops (rule*transaction queries)
 exports.evaluateRules = async (req, res) => {
     let cnt = 0;
     const { ruleIds, transactionIds } = req.body;
@@ -190,6 +191,11 @@ exports.evaluateRules = async (req, res) => {
     console.log(`Evaluating rule 1 Done`);
 };
 
+// Basic SQL-only evaluation, updates all matches
+// Used promises for parellel execution
+// Cons:
+// 1. Not updating risk score properly
+// 2. Not updating transaction flag when clash
 exports.evaluateRules2 = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
@@ -308,6 +314,7 @@ exports.evaluateRules2 = async (req, res) => {
 
     console.log(`Evaluating rule 2 Done`);
 };
+// Risk Update Logic : Cumulative across all rule hits 
 exports.evaluateRules21 = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
@@ -443,6 +450,7 @@ exports.evaluateRules21 = async (req, res) => {
 
     console.log(`Evaluating rule 2.1 Done`);
 };
+// Same as 21 but ties user risk update only to best rule
 exports.evaluateRules22 = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
@@ -580,6 +588,124 @@ exports.evaluateRules22 = async (req, res) => {
 
     console.log(`Evaluating rule 2.2 Done`);
 };
+
+// const pLimit = require('p-limit').default;
+// const limit = pLimit(10); // Tune this limit based on DB load
+const redisHelper = require('../utils/util.RedisHelper');
+
+// exports.evaluateRules23 = async (req, res) => {
+//     if (!req.body || Object.keys(req.body).length === 0) {
+//         throw new ApiError(400, 'Request body is required');
+//     }
+
+//     const { ruleIds, transactionIds } = req.body;
+
+//     // Fetch from Redis
+//     const allRules = await ruleService.getAllActiveRules(); // Assume returns array
+//     const allTransactions = await transactionService.getUnevaluatedTransactions() // Assume returns array
+//     const allUTS = await redisHelper.getHashAll('user:summary') // Assume returns array
+
+//     // Filter if needed
+//     const rules = (!ruleIds || ruleIds.length === 0) ? allRules : allRules.filter(r => ruleIds.includes(r.id));
+//     const transactions = (!transactionIds || transactionIds.length === 0) ? allTransactions : allTransactions.filter(t => transactionIds.includes(t.id));
+
+//     if (rules.length === 0 || transactions.length === 0) {
+//         throw new ApiError(404, 'No matching rules or transactions found');
+//     }
+
+//     const flagPriority = { low: 1, medium: 2, high: 3 };
+//     const matches = [];
+
+//     // Convert UTS array to map for fast lookup
+//     const utsMap = new Map(allUTS.map(u => [u.user_id, u]));
+
+//     // Parallel rule evaluation
+//     const evalTasks = [];
+
+//     for (const rule of rules) {
+//         for (const txn of transactions) {
+//             evalTasks.push(limit(async () => {
+//                 const context = {
+//                     t: txn,
+//                     uts: utsMap.get(txn.receiver_id) || {},
+//                 };
+
+//                 try {
+//                     // Eval is risky; prefer sandboxed interpreters for production
+//                     const result = eval(rule.condition); // Ex: "t.amount > 1000 && uts.txn_count_30 > 5"
+//                     if (result) {
+//                         matches.push({
+//                             ruleId: rule.id,
+//                             transactionId: txn.id,
+//                             ruleMatches: true,
+//                         });
+//                     }
+//                 } catch (e) {
+//                     console.error(`Error evaluating rule ${rule.id} on txn ${txn.id}:`, e);
+//                 }
+//             }));
+//         }
+//     }
+
+//     await Promise.all(evalTasks);
+
+//     // Determine best rule per txn
+//     const txnBestRuleMap = new Map();
+//     const userRiskUpdates = new Map();
+
+//     for (const match of matches) {
+//         const rule = rules.find(r => r.id === match.ruleId);
+//         const txn = transactions.find(t => t.id === match.transactionId);
+//         if (!rule || !txn) continue;
+
+//         const txnId = txn.id;
+//         const newFlag = rule.flag_level;
+//         const current = txnBestRuleMap.get(txnId);
+
+//         if (!current || flagPriority[newFlag] > flagPriority[current.flagLevel]) {
+//             txnBestRuleMap.set(txnId, {
+//                 flagLevel: newFlag,
+//                 ruleId: rule.id,
+//                 riskIncrement: parseFloat(rule.risk_increment),
+//                 userId: txn.receiver_id,
+//             });
+//         }
+//     }
+
+//     const updatePromises = [];
+
+//     for (const [txnId, { flagLevel, ruleId, riskIncrement, userId }] of txnBestRuleMap.entries()) {
+//         updatePromises.push(pool.query(
+//             `UPDATE transactions SET flag = $1, flagged_by_rule = $2 WHERE id = $3`,
+//             [flagLevel, ruleId, txnId]
+//         ));
+
+//         if (userId) {
+//             const current = userRiskUpdates.get(userId) || 0;
+//             userRiskUpdates.set(userId, current + riskIncrement);
+//         }
+//     }
+
+//     for (const [userId, increment] of userRiskUpdates.entries()) {
+//         updatePromises.push(pool.query(
+//             `UPDATE users SET risk_score = LEAST(risk_score + $1, 99.99) WHERE id = $2`,
+//             [increment, userId]
+//         ));
+//     }
+
+//     await Promise.all(updatePromises);
+
+//     res.json({
+//         message: 'Parallel rule evaluation complete',
+//         totalEvaluated: matches.length,
+//         matches,
+//     });
+
+//     console.log(`✅ evaluateRules22 finished with ${matches.length} matches`);
+// };
+
+
+// Modular
 exports.evaluateRules3 = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
