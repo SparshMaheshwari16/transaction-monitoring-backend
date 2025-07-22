@@ -5,6 +5,9 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false, // required by Supabase
+    idleTimeoutMillis: 30000, // close idle clients after 30s
+    connectionTimeoutMillis: 5000, // give up after 5s
+    application_name: 'transaction_monitoring_postgre',
   },
 });
 
