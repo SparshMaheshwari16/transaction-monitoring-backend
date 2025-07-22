@@ -18,9 +18,13 @@ const evaluateRulesRoutes = require('./routes/route.evaluateRules.js');
 const userTransSumRoutes = require('./routes/route.userTransactionSummary.js');
 const behavioralVariableRoutes = require('./routes/route.behavioralVariable.js');
 const testingRoutes = require('./routes/route.testing.js');
+const APIDocsRoutes = require('./routes/route.APIDocs.js');
 
 const ipWhitelist = require('./middlewares/middleware.ip.js');
 const authenticateApiKey = require('./middlewares/middleware.auth.js');
+
+const path = require('path');
+app.use('/custom-assets', express.static(path.join(__dirname, 'assets')));
 
 // /transactions
 app.use('/api/transactions', ipWhitelist, authenticateApiKey, transactionRoutes);
@@ -42,6 +46,10 @@ app.use('/api/user_trans_sum', ipWhitelist, authenticateApiKey, userTransSumRout
 
 // /testing-route
 app.use('/testing-route', ipWhitelist, authenticateApiKey, testingRoutes);
+
+// API-Docs
+app.use('/api-docs', ipWhitelist, APIDocsRoutes);
+
 
 app.use((err, req, res, next) => {
     // console.error(err.stack);

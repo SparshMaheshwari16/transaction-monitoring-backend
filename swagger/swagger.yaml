@@ -1,0 +1,611 @@
+openapi: 3.0.0
+info:
+  title: Transaction monitoring
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+components:
+  securitySchemes:
+    apikeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      # scheme: apikey
+security:
+  - apikeyAuth: []
+tags:
+  - name: Transactions
+  - name: Rules
+  - name: Users
+  - name: User Transaction Summary
+  - name: Evaluate rules
+  - name: Behavioral Variables
+  - name: Testing
+paths:
+  /api/transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Get all transaction
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/transactions/unevaluated:
+    get:
+      tags:
+        - Transactions
+      summary: Get all unevaluated transaction
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/transactions/evaluated:
+    get:
+      tags:
+        - Transactions
+      summary: Get all evaluated transaction
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/transactions/{transaction_id}:
+    get:
+      tags:
+        - Transactions
+      summary: Get a transaction by id
+      parameters:
+        - name: transaction_id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "080d86f2-29b4-4c55-9b6f-fd087afe69ea"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/transactions/query-by-ids:
+    post:
+      tags:
+        - Transactions
+      summary: Get multiple transaction by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ids:
+                  - 0cf858f6-22a7-4032-ac18-13588285ed3d
+                  - 2fab81cb-1954-472d-8280-0d6489debf33
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/transactions/reset-flag:
+    patch:
+      tags:
+        - Transactions
+      summary: Reset flags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              # example: ''
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/transactions/reset-flag-by-ids:
+    patch:
+      tags:
+        - Transactions
+      summary: Reset flags by ids
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ids:
+                  - 0cf858f6-22a7-4032-ac18-13588285ed3d
+                  - 2fab81cb-1954-472d-8280-0d6489debf33
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/rules:
+    get:
+      tags:
+        - Rules
+      summary: Get all rules
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Rules
+      summary: Create rule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: 'Creating rule for testing'
+                condition: 'Creating rule for testing'
+                flag_level: 'Low'
+                risk_increment: '0.8'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/rules/active:
+    get:
+      tags:
+        - Rules
+      summary: Get all active rules
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/rules/inactive:
+    get:
+      tags:
+        - Rules
+      summary: Get all inactive rules
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/rules/{rule_id}:
+    get:
+      tags:
+        - Rules
+      summary: Get a rules by id
+      parameters:
+        - name: rule_id
+          in: path
+          schema:
+            type: string
+            example: "34f79051-b7d2-4c87-a2bc-0d86c4c2bcca"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - Rules
+      summary: Update rule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: 'Testing whole rule updation'
+                condition: 'Testing whole rule updation'
+                flag_level: 'Medium'
+                risk_increment: '0.8'
+      parameters:
+        - name: rule_id
+          in: path
+          schema:
+            type: string
+            example: "15d5d9b6-fbbb-43e1-929d-7dfad6165557"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Rules
+      summary: Delete rule
+      parameters:
+        - name: rule_id
+          in: path
+          schema:
+            type: string
+            example: "15d5d9b6-fbbb-43e1-929d-7dfad6165557"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/rules/query-by-ids:
+    post:
+      tags:
+        - Rules
+      summary: Get multiple rules by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ids:
+                  - 0cf858f6-22a7-4032-ac18-13588285ed3d
+                  - 2fab81cb-1954-472d-8280-0d6489debf33
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/rules/{rule_id}/toggle-active:
+    patch:
+      tags:
+        - Rules
+      summary: Toggle is active
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              # example: ''
+      parameters:
+        - name: rule_id
+          in: path
+          schema:
+            type: string
+            example: "34f79051-b7d2-4c87-a2bc-0d86c4c2bcca"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Users
+      summary: Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: 'Testing Create user'
+                balance: '1000'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users/reset-risk-score:
+    patch:
+      tags:
+        - Users
+      summary: Reset risk score
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: Get a user by id
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: string
+            example: "53079938-0cd7-4f9c-b00f-dd11ea836ff1"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - Users
+      summary: Update user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: "Testing update user"
+                balance: 500
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: string
+            example: "c05470ad-0b45-4525-9cb6-c9d38b3e7e01"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: string
+            example: "c05470ad-0b45-4525-9cb6-c9d38b3e7e01"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users/query-by-ids:
+    post:
+      tags:
+        - Users
+      summary: Get multiple user by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ids:
+                  - 0cf858f6-22a7-4032-ac18-13588285ed3d
+                  - 13544630-e1f7-4b73-9027-488da59a0192
+                  - 15e1faa3-cb29-467d-bc18-478751b65d25
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users/{user_id}/balance:
+    patch:
+      tags:
+        - Users
+      summary: Update balance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: 
+                balance: '500'
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: string
+            example: "c05470ad-0b45-4525-9cb6-c9d38b3e7e01"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/user_trans_sum:
+    get:
+      tags:
+        - User Transaction Summary
+      summary: Get all
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/user_trans_sum/{user_id}:
+    get:
+      tags:
+        - User Transaction Summary
+      summary: Get by id
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: string
+            example: "53079938-0cd7-4f9c-b00f-dd11ea836ff1"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/evaluateRule/{rule_id}/{transaction_id}:
+    get:
+      tags:
+        - Evaluate rules
+      summary: A rule A transaction
+      parameters:
+        - name: rule_id
+          in: path
+          schema:
+            type: string
+            example: "34f79051-b7d2-4c87-a2bc-0d86c4c2bcca"
+          required: true
+        - name: transaction_id
+          in: path
+          schema:
+            type: string
+            example: "080d86f2-29b4-4c55-9b6f-fd087afe69ea"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/evaluateRule:
+    post:
+      tags:
+        - Evaluate rules
+      summary: Evaluate rule 1 live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                transactionIds:
+                  - 04167762-3c8c-42cb-90a0-6c4c77c93422
+                  - 062972c6-64a9-4519-86f9-e93899c033b9
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/evaluateRule/2:
+    post:
+      tags:
+        - Evaluate rules
+      summary: Evaluate rule 2 live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                transactionIds:
+                  - 04167762-3c8c-42cb-90a0-6c4c77c93422
+                  - 03ee5bda-293a-4c64-a02d-c2da7ffee1f7
+                  - 0cf858f6-22a7-4032-ac18-13588285ed3d
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/evaluateRule/2.1:
+    post:
+      tags:
+        - Evaluate rules
+      summary: Evaluate rule 2.1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "// {\r\n//     \"ruleIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"],\r\n//     \"transactionIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"]\r\n// }\r\n\r\n{\r\n    \"ruleIds\": [],\r\n    \"transactionIds\": []\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/evaluateRule/2.2:
+    post:
+      tags:
+        - Evaluate rules
+      summary: Evaluate rule 2.2 live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                transactionIds:
+                  - 04167762-3c8c-42cb-90a0-6c4c77c93422
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/evaluateRule/2.3:
+    post:
+      tags:
+        - Evaluate rules
+      summary: Evaluate rule 2.3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "// {\r\n//     \"ruleIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"],\r\n//     \"transactionIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"]\r\n// }\r\n\r\n{\r\n    \"ruleIds\": [],\r\n    \"transactionIds\": []\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/evaluateRule/3:
+    post:
+      tags:
+        - Evaluate rules
+      summary: Evaluate rule 3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "// {\r\n//     \"ruleIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"],\r\n//     \"transactionIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"]\r\n// }\r\n\r\n{\r\n    \"ruleIds\": [],\r\n    \"transactionIds\": []\r\n}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/behavioral-variable/test:
+    get:
+      tags:
+        - Behavioral Variables
+      summary: Test
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/behavioral-variable:
+    get:
+      tags:
+        - Behavioral Variables
+      summary: Get all
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/behavioral-variable/update:
+    get:
+      tags:
+        - Behavioral Variables
+      summary: Update all variable value in uts table
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /testing-route:
+    get:
+      tags:
+        - Testing
+      summary: Testing
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

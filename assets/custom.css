@@ -1,0 +1,5 @@
+.topbar,
+.version,
+.title span {
+    display: none !important;
+}
