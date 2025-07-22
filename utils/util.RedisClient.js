@@ -30,12 +30,12 @@ redis.on('error', (err) => {
 
 async function clearRedisCache() {
     try {
-        console.log("Clearing cache...");
+        // console.log("Clearing cache...");
 
         // Clear all Redis data
         await redis.flushAll();
         console.log("Redis cache cleared successfully!");
-        console.log('*-*-*-*-*-*-*-*-*-*-');
+        // console.log('*-*-*-*-*-*-*-*-*-*-');
 
     } catch (err) {
         console.error('Error clearing Redis cache on startup:', err);

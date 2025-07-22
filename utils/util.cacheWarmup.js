@@ -5,7 +5,7 @@ const userService = require('../services/service.user'); // Assuming this has ge
 
 async function warmupCache() {
     try {
-        console.log('Starting cache warmup...');
+        // console.log('Starting cache warmup...');
 
         await ruleService.getAllRules();
         // console.log('Rules cached');
