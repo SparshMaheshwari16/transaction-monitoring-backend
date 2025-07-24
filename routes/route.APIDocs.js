@@ -8,6 +8,8 @@ const swaggerDocument = yaml.load('./swagger/swagger.yaml');
 
 router.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
     customCssUrl: '/custom-assets/custom.css',
+    customSiteTitle: "API Docs",
+    customfavIcon: '/custom-assets/favicon.ico',
     swaggerOptions: {
         authAction: {
             ApiKeyAuth: {
