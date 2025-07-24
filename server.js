@@ -5,6 +5,17 @@ const express = require('express');
 // const pool = require('./db/index.js');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const cors = require('cors');
+
+// Allow requests from localhost:3001
+app.use(cors({
+  origin: 'http://localhost:3001',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
+
+// Or for all origins (dev only! not for production)
+// app.use(cors());
 
 // Middleware example (optional)
 app.use(express.json()); // for parsing application/json
@@ -75,6 +86,6 @@ app.use((req, res) => {
 require('./cron/cron.test.js');
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
