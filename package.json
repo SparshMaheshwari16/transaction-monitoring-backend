@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:redis": "docker run -d --name transRedis -p 6379:6379 -p 8001:8001 redis/redis-stack:latest",
+    "start:redis": "docker start transRedis || docker run -d --name transRedis -p 6379:6379 -p 8001:8001 redis/redis-stack:latest",
     "start:app": "cross-env TZ=Asia/Kolkata nodemon server.js",
     "start": "npm run start:redis && npm run start:app"
   },
