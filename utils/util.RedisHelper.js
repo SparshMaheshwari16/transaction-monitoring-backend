@@ -1,6 +1,16 @@
 
 const { redis, isRedisConnected } = require('./util.RedisClient'); // adjust path as needed
 
+async function ping() {
+  if (!isRedisConnected()) return null;
+  try {
+    const data = await redis.ping();
+    return data;
+  } catch (err) {
+    return null;
+  }
+}
+
 /**
  * Get data from Redis cache
  * @param {string} key - Redis key
@@ -110,4 +120,4 @@ async function getHashAll(key) {
 //   }
 // }
 
-module.exports = { getCache, setCache, deleteCache, setHash, getHashField, getHashAll, deleteHashField };
+module.exports = { ping, getCache, setCache, deleteCache, setHash, getHashField, getHashAll, deleteHashField };
