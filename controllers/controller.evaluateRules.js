@@ -576,7 +576,7 @@ exports.evaluateRules22 = async (req, res) => {
         ));
     }
 
-    await Promise.all(updatePromises);
+    Promise.all(updatePromises);
 
     res.json({
         message: 'SQL-only rule evaluation complete',
