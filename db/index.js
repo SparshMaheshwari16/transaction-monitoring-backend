@@ -20,7 +20,7 @@ pool.on('error', (err) => {
 // Optional: Test the connection immediately
 pool.connect((err, client, release) => {
   if (err) {
-    console.error('Error connecting to PostgreSQL:', err.stack);
+    console.error('Error connecting to PostgreSQL:', err);
   } else {
     console.log('Connected to PostgreSQL');
     console.log('*-*-*-*-*-*-*-*-*-*-');
