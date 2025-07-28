@@ -31,10 +31,13 @@ module.exports.getAllActiveRules = async () => {
     }
     const result = await pool.query('SELECT * FROM rules WHERE is_active=true');
     activeRules = result.rows
-    
+
     // Store in Redis for 6 hr
 
-    await redisHelper.setCache('rules:active', activeRules, 21600);
+    // await redisHelper.setCache('rules:active', activeRules, 21600);
+    for (const rule of result.rows) {
+        await redisHelper.setHash('rules:active:byId', rule.id, rule, 21600);
+    }
 
     return activeRules;
 };
@@ -110,5 +113,14 @@ module.exports.updateRule = async (id, name, condition, flag_level, risk_increme
 }
 module.exports.toggleActiveRule = async (id) => {
     const result = await pool.query('UPDATE rules SET is_active = NOT is_active WHERE id = $1 RETURNING *', [id]);
+
+    const updatedRule = result.rows[0];
+
+    // Update rules:byId Hash
+    await redisHelper.setHash('rules:byId', id, updatedRule, 21600);
+
+    // Update rules:active:byId Hash
+    await redisHelper.setHash('rules:active:byId', id, updatedRule, 21600);
+
     return result.rows[0]; // toggled rule or undefined if not found
 };

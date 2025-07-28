@@ -21,7 +21,7 @@ async function warmupCache() {
 
         console.log('Cache warmup complete!');
     } catch (err) {
-        console.error('Cache warmup failed:', err);
+        console.error('Cache warmup failed:', err.message);
     }
 }
 
