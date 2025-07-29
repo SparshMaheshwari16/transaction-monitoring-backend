@@ -47,7 +47,7 @@ async function clearRedisCache() {
         await redis.connect();
         console.log('Redis connectedd');
         await clearRedisCache();
-        
+
         const warmupCache = require('./util.cacheWarmup');
         // Cache Warmup
         await warmupCache();
@@ -60,4 +60,5 @@ async function clearRedisCache() {
 module.exports = {
     redis,
     isRedisConnected: () => isRedisConnected,
+    clearRedisCache
 };
