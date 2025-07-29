@@ -7,5 +7,6 @@ const asyncHandler = require('../utils/util.asyncHandler');
 router.get('/', asyncHandler(healthCheckController.allHealthCheck));
 router.get('/db-health', asyncHandler(healthCheckController.dbHealthCheck));
 router.get('/redis-health', asyncHandler(healthCheckController.redisHealthCheck));
+router.get('/redis-cache-warmup', asyncHandler(healthCheckController.redisWarmUp));
 
 module.exports = router;

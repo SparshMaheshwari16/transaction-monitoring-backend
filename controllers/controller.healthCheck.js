@@ -1,5 +1,7 @@
 const healthCheckService = require('../services/service.healthCheck');
 const ApiError = require('../utils/util.ApiError');
+const warmupCache = require('../utils/util.cacheWarmup.js');
+const { isRedisConnected } = require('../utils/util.RedisClient.js');
 
 exports.allHealthCheck = async (req, res) => {
     const result = await healthCheckService.allhealthCheck();
@@ -49,4 +51,13 @@ exports.redisHealthCheck = async (req, res) => {
 
 };
 
-
+exports.redisWarmUp = async (req, res) => {
+    if (!isRedisConnected()) {
+        throw new ApiError(500, "Redis not Connected");
+    }
+    await warmupCache();
+    return res.json({
+        success: true,
+        message: "Redis cache warmup success"
+    })
+}
