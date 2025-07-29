@@ -7,9 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 
-// Allow requests from localhost:3001
+// Allow requests from Front-end URL
 app.use(cors({
-    origin: 'http://localhost:3001',
+    origin: process.env.FRONT_END_URL,
     methods: ['GET', 'POST', 'PATCH'],
     credentials: true
 }));
