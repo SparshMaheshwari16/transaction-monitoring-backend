@@ -23,7 +23,8 @@ module.exports.getAllRules = async () => {
 };
 module.exports.getAllActiveRules = async () => {
     // Try cache
-    let activeRules = await redisHelper.getCache('rules:active');
+    // let activeRules = await redisHelper.getCache('rules:active');
+    let activeRules = await redisHelper.getHashAll('rules:active:byId');
 
     if (activeRules) {
         console.log('Returning all active rules from Redis cache');
@@ -119,8 +120,14 @@ module.exports.toggleActiveRule = async (id) => {
     // Update rules:byId Hash
     await redisHelper.setHash('rules:byId', id, updatedRule, 21600);
 
-    // Update rules:active:byId Hash
-    await redisHelper.setHash('rules:active:byId', id, updatedRule, 21600);
+    // Update active rules hash
+    if (updatedRule.is_active) {
+        // Add or update in active rules hash
+        await redisHelper.setHash('rules:active:byId', id, updatedRule, 21600);
+    } else {
+        // Remove from active rules hash
+        await redisHelper.deleteHashField('rules:active:byId', id);
+    }
 
     return result.rows[0]; // toggled rule or undefined if not found
 };
