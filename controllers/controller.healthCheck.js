@@ -52,6 +52,11 @@ exports.redisHealthCheck = async (req, res) => {
 };
 
 exports.redisWarmUp = async (req, res) => {
+    const dbStatus = (await healthCheckService.dbHealthCheck()).status;
+
+    if (dbStatus === "DOWN") {
+        throw new ApiError(500, "Database not Connected");
+    }
     if (!isRedisConnected()) {
         throw new ApiError(500, "Redis not Connected");
     }
