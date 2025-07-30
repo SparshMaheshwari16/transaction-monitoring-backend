@@ -74,7 +74,7 @@ app.use((err, req, res, next) => {
     // }
 
     console.log(`In error handling middleware`);
-    console.log(`err: ${err}`);
+    console.error(`err: ${err}`);
     console.error(`Error occurred on ${req.method} ${req.originalUrl}`);
     if (err.originalError) {
         console.error('Original Error:', err.originalError);
