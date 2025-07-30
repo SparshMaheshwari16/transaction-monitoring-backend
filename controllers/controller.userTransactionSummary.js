@@ -77,8 +77,4 @@ exports.updateUserTransactionSummary = async (req, res) => {
     }
 
     res.json({ message: 'User transaction summary updated successfully.' });
-
-    // console.error('Error updating transaction summary:', error);
-    // res.status(500).json({ message: 'Internal server error', error: error.message });
-
 };

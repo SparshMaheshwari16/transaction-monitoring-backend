@@ -108,16 +108,4 @@ async function getHashAll(key) {
   }
 }
 
-// async function clearRedisCache() {
-//   try {
-//     console.log("Clearing cache...");
-
-//     // Clear all Redis data
-//     await redis.flushall();
-//     console.log("Redis cache cleared successfully!");
-//   } catch (err) {
-//     console.error('Error clearing Redis cache on startup:', err);
-//   }
-// }
-
 module.exports = { ping, getCache, setCache, deleteCache, setHash, getHashField, getHashAll, deleteHashField };

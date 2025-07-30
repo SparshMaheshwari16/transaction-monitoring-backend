@@ -65,9 +65,6 @@ exports.evaluateRules = async (req, res) => {
     const evaluateAllRules = !Array.isArray(ruleIds) || ruleIds.length === 0;
     const evaluateAllTransactions = !Array.isArray(transactionIds) || transactionIds.length === 0;
 
-    // console.log(`evaluateAllRules: ${evaluateAllRules}`);
-    // console.log(`evaluateAllTransactions: ${evaluateAllTransactions}`);
-
     // Fetch relevant rules
     let rules;
     let missingRuleIds = [];

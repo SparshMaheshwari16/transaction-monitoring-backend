@@ -12,12 +12,6 @@ exports.getAllTransactions = async (req, res) => {
         message: 'Fetched all transactions successfully',
         data: result
     });
-
-    // res.send('Fetched transactions successfully');
-
-    // console.error('PostgreSQL query error:', err.message);
-    // res.status(500).json({ error: 'Failed to fetch transactions' });
-
 };
 exports.getTransactionById = async (req, res) => {
     const transactionId = req.params.id;
@@ -35,13 +29,6 @@ exports.getTransactionById = async (req, res) => {
         message: 'Fetched a transactions by id successfully',
         data: result
     });
-
-
-    // res.send('Fetched transactions successfully');
-
-    // console.error('PostgreSQL query error:', err.message);
-    // res.status(500).json({ error: 'Failed to fetch transaction by id' });
-
 };
 
 exports.getTransactionsByIds = async (req, res) => {

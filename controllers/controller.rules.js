@@ -13,19 +13,13 @@ exports.getAllRules = async (req, res) => {
         message: 'Fetched all rules successfully',
         data: rules
     });
-
-    // res.send('Fetched rules successfully');
-
-    // console.error('PostgreSQL query error:', err.message);
-    // res.status(500).json({ error: 'Failed to fetch rules' });
-
 };
 
-exports.getAllActiveRules=async(req,res)=>{
-    const activeRules=await ruleService.getAllActiveRules();
-    
-    if(!activeRules || activeRules.length===0){
-        throw new ApiError(404,'No active rules found');
+exports.getAllActiveRules = async (req, res) => {
+    const activeRules = await ruleService.getAllActiveRules();
+
+    if (!activeRules || activeRules.length === 0) {
+        throw new ApiError(404, 'No active rules found');
     }
     res.status(200).json({
         success: true,
@@ -33,11 +27,11 @@ exports.getAllActiveRules=async(req,res)=>{
         data: activeRules
     });
 };
-exports.getAllInactiveRules=async(req,res)=>{
-    const inactiveRules=await ruleService.getAllInactiveRules();
-    
-    if(!inactiveRules || inactiveRules.length===0){
-        throw new ApiError(404,'No inactive rules found');
+exports.getAllInactiveRules = async (req, res) => {
+    const inactiveRules = await ruleService.getAllInactiveRules();
+
+    if (!inactiveRules || inactiveRules.length === 0) {
+        throw new ApiError(404, 'No inactive rules found');
     }
     res.status(200).json({
         success: true,
@@ -89,11 +83,10 @@ exports.getRulesByIds = async (req, res) => {
 }
 exports.createRule = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
-        // return res.status(400).json({ error: 'Request body is required' });
         throw new ApiError(400, 'Request body is required');
     }
     const { name, condition, flag_level, risk_increment } = req.body;
-    // console.log('Received data:', req.body);
+
     if (!name || !condition || !flag_level || !risk_increment) {
         throw new ApiError(400, 'Missing required fields');
     }
@@ -108,11 +101,6 @@ exports.createRule = async (req, res) => {
         message: 'Rule created successfully',
         data: result
     });
-
-
-    // console.error('PostgreSQL query error:', err.message);
-    // res.status(500).json({ error: 'Failed to create rule' });
-
 };
 
 exports.deleteRule = async (req, res) => {
@@ -160,10 +148,6 @@ exports.updateRule = async (req, res) => {
         message: 'Rule updated successfully',
         data: result
     });
-
-    // console.error('PostgreSQL query error:', err.message);
-    // res.status(500).json({ error: 'Failed to update rule' });
-
 };
 
 exports.toggleActiveRule = async (req, res) => {
@@ -181,10 +165,6 @@ exports.toggleActiveRule = async (req, res) => {
         message: 'Rule active status toggled successfully',
         data: result
     });
-
-    // console.error('PostgreSQL query error:', err.message);
-    // res.status(500).json({ error: 'Failed to toggle rule active status' });
-
 };
 
 

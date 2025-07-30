@@ -60,7 +60,7 @@ exports.createUser = async (req, res) => {
         throw new ApiError(404, 'Request body is required');
     }
     const { name, balance } = req.body;
-    // console.log('Received data:', req.body);
+
     if (!name || !balance) {
         throw new ApiError(400, 'Missing required fields');
     }
