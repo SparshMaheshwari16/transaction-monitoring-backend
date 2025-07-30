@@ -2,10 +2,10 @@ const pool = require('../db'); // adjust this if your pool is elsewhere
 const redisHelper = require('../utils/util.RedisHelper');
 
 module.exports.getAllUser = async () => {
-    const CACHE_KEY = 'users:all';
+    const CACHE_KEY = 'user:byId';
 
     // Step 1: Try cache first
-    const cachedData = await redisHelper.getCache(CACHE_KEY);
+    const cachedData = await redisHelper.getHashAll(CACHE_KEY);
 
     if (cachedData) {
         console.log('Returning users from Redis cache');
@@ -17,9 +17,9 @@ module.exports.getAllUser = async () => {
     const result = await pool.query('SELECT * FROM users');
 
     // Step 3: Store in Redis for 6 hr (21600 seconds)
-
-    await redisHelper.setCache(CACHE_KEY, result.rows, 21600);
-
+    for (const user of result.rows) {
+        await redisHelper.setHash(CACHE_KEY, user.id, user, 21600);
+    }
     return result.rows;
 };
 
