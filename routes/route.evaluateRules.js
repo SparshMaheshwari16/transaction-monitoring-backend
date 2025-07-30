@@ -5,6 +5,7 @@ const evaluateRulesController = require('../controllers/controller.evaluateRules
 const asyncHandler = require('../utils/util.asyncHandler');
 
 router.get('/:ruleId/:transactionId', asyncHandler(evaluateRulesController.dryRunARuleOnATransaction));
+router.get('/result', asyncHandler(evaluateRulesController.getEvaluationResults));
 router.post('/', asyncHandler(evaluateRulesController.evaluateRules));
 router.post('/2', asyncHandler(evaluateRulesController.evaluateRules2));
 router.post('/2.1', asyncHandler(evaluateRulesController.evaluateRules21));

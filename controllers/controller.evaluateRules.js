@@ -727,3 +727,41 @@ exports.evaluateRules3 = async (req, res) => {
 };
 
 
+exports.getEvaluationResults = async (req, res) => {
+    try {
+        const query = `
+            SELECT receiver_id, flag, COUNT(*) AS transaction_count
+            FROM transactions
+            WHERE flag IS NOT NULL
+            GROUP BY receiver_id, flag
+            ORDER BY receiver_id
+        `;
+
+        const { rows } = await pool.query(query);
+        const receiverIds = [...new Set(rows.map(row => row.receiver_id))];
+
+        // Already parsed user objects
+        const redisUserValues = await redisHelper.getHashFields('user:byId', receiverIds);
+
+        const userMap = {};
+        redisUserValues.forEach((user, idx) => {
+            if (user) {
+                userMap[receiverIds[idx]] = user.name;
+            }
+        });
+
+        const finalData = rows.map(row => ({
+            username: userMap[row.receiver_id] || row.receiver_id,
+            flag: row.flag,
+            transaction_count: row.transaction_count
+        }));
+
+        return res.json({
+            success: true,
+            data: finalData
+        });
+    } catch (error) {
+        console.error('Error fetching evaluation results:', error);
+        throw new ApiError(500, 'Failed to fetch evaluation results');
+    }
+};
