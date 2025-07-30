@@ -90,22 +90,58 @@ async function getHashAll(key) {
     const data = await redis.hGetAll(key);
     if (Object.keys(data).length === 0) return null;
 
-    const rules = [];
+    const result = [];
 
     for (const k in data) {
       try {
         const parsed = JSON.parse(data[k]);
-        rules.push(parsed);
+        result.push(parsed);
       } catch (e) {
         console.warn(`Failed to parse value for key "${k}" in hash "${key}":`, e.message);
       }
     }
 
-    return rules;
+    return result;
   } catch (err) {
     console.error(`Redis HGETALL error for ${key}`, err.message);
     return null;
   }
 }
 
-module.exports = { ping, getCache, setCache, deleteCache, setHash, getHashField, getHashAll, deleteHashField };
+async function getHashFields(hashKey, fieldArray) {
+  if (!isRedisConnected()) return null;
+
+  if (!Array.isArray(fieldArray) || fieldArray.length === 0) return [];
+
+  try {
+    const data = await redis.hmGet(hashKey, fieldArray); // returns array of strings (or nulls)
+
+    if (!data || data.length === 0) return null;
+
+    const result = [];
+
+    data.forEach((val, idx) => {
+      if (val) {
+        try {
+          const parsed = JSON.parse(val);
+          result.push(parsed);
+        } catch (e) {
+          console.warn(
+            `Failed to parse value for field "${fieldArray[idx]}" in hash "${hashKey}":`,
+            e.message
+          );
+          result.push(null);
+        }
+      } else {
+        result.push(null); // Field not found
+      }
+    });
+
+    return result;
+  } catch (err) {
+    console.error(`Redis HMGET error for hash "${hashKey}":`, err.message);
+    return null;
+  }
+}
+
+module.exports = { ping, getCache, setCache, deleteCache, setHash, getHashField, getHashFields, getHashAll, deleteHashField };
