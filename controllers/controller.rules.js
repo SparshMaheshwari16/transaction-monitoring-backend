@@ -85,14 +85,14 @@ exports.createRule = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
         throw new ApiError(400, 'Request body is required');
     }
-    const { name, condition, flag_level, risk_increment } = req.body;
+    const { name, condition, flag_level, risk_increment, description } = req.body;
 
-    if (!name || !condition || !flag_level || !risk_increment) {
+    if (!name || !condition || !flag_level || !risk_increment || !description) {
         throw new ApiError(400, 'Missing required fields');
     }
 
 
-    const result = await ruleService.createRule(name, condition, flag_level, risk_increment);
+    const result = await ruleService.createRule(name, condition, flag_level, risk_increment, description);
     if (!result) {
         throw new ApiError(500, 'Failed to create rule');
     }

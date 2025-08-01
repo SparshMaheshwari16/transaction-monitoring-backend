@@ -68,10 +68,10 @@ module.exports.getRulesByIds = async (ids) => {
     const result = await pool.query('SELECT * FROM rules WHERE id=ANY($1)', [ids]);
     return result.rows;
 }
-module.exports.createRule = async (name, condition, flag_level, risk_increment) => {
+module.exports.createRule = async (name, condition, flag_level, risk_increment, description) => {
     const result = await pool.query(
-        'INSERT INTO rules (name, condition, flag_level, risk_increment) VALUES ($1, $2, $3, $4) RETURNING *',
-        [name, condition, flag_level, risk_increment]
+        'INSERT INTO rules (name, condition, flag_level, risk_increment,description) VALUES ($1, $2, $3, $4,$5) RETURNING *',
+        [name, condition, flag_level, risk_increment, description]
     );
 
     const newRule = result.rows[0];
