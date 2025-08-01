@@ -47,7 +47,7 @@ exports.getRuleById = async (req, res) => {
 
     const result = await ruleService.getRuleById(ruleId);
     if (!result) {
-        return res.status(404).json({ error: 'Rule not found' });
+        throw new ApiError(404, 'Rule not found');
     }
 
 

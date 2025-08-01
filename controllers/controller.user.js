@@ -106,7 +106,7 @@ exports.updateUser = async (req, res) => {
     const { name, balance } = req.body;
 
     if (!name || !balance) {
-        return res.status(400).json({ error: 'Missing required fields' });
+        throw new ApiError(400, 'Missing required fields');
     }
     const result = await userService.updateUser(userId, name, balance);
 
