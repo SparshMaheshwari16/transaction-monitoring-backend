@@ -7,6 +7,7 @@ const asyncHandler = require('../utils/util.asyncHandler');
 // GET /api/users
 router.get('/', asyncHandler(userController.getAllUsers));
 router.get('/:id', asyncHandler(userController.getUserById));
+router.get('/flagged/:id', asyncHandler(userController.flaggedTransactionByUser));
 router.post('/query-by-ids', asyncHandler(userController.getUsersByIds));
 // POST /api/users
 router.post('/', asyncHandler(userController.createUser));

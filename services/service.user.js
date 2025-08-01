@@ -65,3 +65,9 @@ module.exports.resetRiskScore = async () => {
     );
     return result.rows;
 }
+module.exports.flaggedTransactionByUser = async (id) => {
+    const result = await pool.query(
+        'SELECT * FROM transactions WHERE receiver_id=$1 AND flag is NOT NULL', [id]
+    );
+    return result.rows;
+}
