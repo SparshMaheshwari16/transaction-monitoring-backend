@@ -96,6 +96,11 @@ exports.createRule = async (req, res) => {
     if (!result) {
         throw new ApiError(500, 'Failed to create rule');
     }
+
+    // By default set the rule is_active to false
+    const ruleId = result.id;
+    ruleService.toggleActiveRule(ruleId);
+
     res.status(200).json({
         success: true,
         message: 'Rule created successfully',
