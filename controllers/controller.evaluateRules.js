@@ -751,6 +751,7 @@ exports.getEvaluationResults = async (req, res) => {
         });
 
         const finalData = rows.map(row => ({
+            id: row.receiver_id,
             username: userMap[row.receiver_id] || row.receiver_id,
             flag: row.flag,
             transaction_count: row.transaction_count
