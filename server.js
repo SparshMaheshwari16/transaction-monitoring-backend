@@ -28,7 +28,6 @@ const userRoutes = require('./routes/route.user.js');
 const evaluateRulesRoutes = require('./routes/route.evaluateRules.js');
 const userTransSumRoutes = require('./routes/route.userTransactionSummary.js');
 const behavioralVariableRoutes = require('./routes/route.behavioralVariable.js');
-const testingRoutes = require('./routes/route.testing.js');
 const APIDocsRoutes = require('./routes/route.APIDocs.js');
 const healthCheckRoutes = require('./routes/route.healthCheck.js');
 const uploadRoutes = require('./routes/route.upload.js');
@@ -56,9 +55,6 @@ app.use('/api/behavioral-variable', ipWhitelist, authenticateApiKey, behavioralV
 
 // /user_transaction_summary
 app.use('/api/user_trans_sum', ipWhitelist, authenticateApiKey, userTransSumRoutes);
-
-// /testing-route
-app.use('/testing-route', ipWhitelist, authenticateApiKey, testingRoutes);
 
 // API-Docs
 app.use('/api-docs', ipWhitelist, APIDocsRoutes);
