@@ -605,6 +605,16 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/evaluateRule/result:
+    get:
+      tags:
+        - Evaluate rules
+      summary: Result
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/behavioral-variable:
     get:
       tags:
