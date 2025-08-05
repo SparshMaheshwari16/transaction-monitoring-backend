@@ -6,6 +6,7 @@ const asyncHandler = require('../utils/util.asyncHandler');
 
 // GET /api/transactions
 router.get('/', asyncHandler(transactionsController.getAllTransactions));
+router.delete('/', asyncHandler(transactionsController.deleteAllTrasactions));
 router.get('/unevaluated', asyncHandler(transactionsController.getUnevaluatedTransactions));
 router.get('/evaluated', asyncHandler(transactionsController.getEvaluatedTransactions));
 router.get('/:id', asyncHandler(transactionsController.getTransactionById));

@@ -118,5 +118,15 @@ exports.resetFlagStatusByIds = async (req, res) => {
         missingIds: missingIds.length > 0 ? missingIds : undefined
     });
 };
-
+exports.deleteAllTrasactions = async (req, res) => {
+    const result = await transactionService.deleteAllTrasactions();
+    if (!result || result.length === 0) {
+        throw new ApiError(404, 'No transactions found');
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Deleted all transactions successfully',
+        data: result
+    });
+}
 

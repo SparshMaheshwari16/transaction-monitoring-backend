@@ -35,3 +35,9 @@ module.exports.resetFlagStatusByIds = async (ids) => {
     return result.rows;
 }
 
+module.exports.deleteAllTrasactions = async () => {
+    const result = await pool.query('DELETE FROM transactions RETURNING *')
+    return result.rows;
+}
+
+
