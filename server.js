@@ -31,6 +31,7 @@ const behavioralVariableRoutes = require('./routes/route.behavioralVariable.js')
 const testingRoutes = require('./routes/route.testing.js');
 const APIDocsRoutes = require('./routes/route.APIDocs.js');
 const healthCheckRoutes = require('./routes/route.healthCheck.js');
+const uploadRoutes = require('./routes/route.upload.js');
 
 const ipWhitelist = require('./middlewares/middleware.ip.js');
 const authenticateApiKey = require('./middlewares/middleware.auth.js');
@@ -63,8 +64,10 @@ app.use('/testing-route', ipWhitelist, authenticateApiKey, testingRoutes);
 app.use('/api-docs', ipWhitelist, APIDocsRoutes);
 
 // /healthCheck
-app.use('/api/health-check', ipWhitelist, authenticateApiKey, healthCheckRoutes)
+app.use('/api/health-check', ipWhitelist, authenticateApiKey, healthCheckRoutes);
 
+// /upload
+app.use('/api/upload', ipWhitelist, authenticateApiKey, uploadRoutes);
 
 
 app.use((err, req, res, next) => {
