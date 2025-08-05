@@ -23,13 +23,23 @@ tags:
   - name: User Transaction Summary
   - name: Evaluate rules
   - name: Behavioral Variables
-  - name: Testing
+  - name: Health check
+  - name: Upload
 paths:
   /api/transactions:
     get:
       tags:
         - Transactions
       summary: Get all transaction
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Transactions
+      summary: Delete all trasactions
       responses:
         '200':
           description: Successful response
@@ -150,6 +160,7 @@ paths:
                 condition: 'Creating rule for testing'
                 flag_level: 'Low'
                 risk_increment: '0.8'
+                description: 'description'
       responses:
         '200':
           description: Successful response
@@ -206,6 +217,7 @@ paths:
                 condition: 'Testing whole rule updation'
                 flag_level: 'Medium'
                 risk_increment: '0.8'
+                description: 'description'
       parameters:
         - name: rule_id
           in: path
@@ -416,6 +428,23 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/users/flagged/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: Flagged transaction
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: string
+            example: "c05470ad-0b45-4525-9cb6-c9d38b3e7e01"
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/user_trans_sum:
     get:
       tags:
@@ -571,16 +600,6 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/behavioral-variable/test:
-    get:
-      tags:
-        - Behavioral Variables
-      summary: Test
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
   /api/behavioral-variable:
     get:
       tags:
@@ -601,11 +620,60 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /testing-route:
+  /api/health-check:
     get:
       tags:
-        - Testing
-      summary: Testing
+        - Health check
+      summary: All Service
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/health-check/db-health:
+    get:
+      tags:
+        - Health check
+      summary: DB
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/health-check/redis-health:
+    get:
+      tags:
+        - Health check
+      summary: Redis
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/health-check/redis-cache-warmup:
+    get:
+      tags:
+        - Health check
+      summary: Redis cache warmup
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/upload/transaction:
+    post:
+      tags:
+        - Upload
+      summary: upload transactions
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                csvFile:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: Successful response
