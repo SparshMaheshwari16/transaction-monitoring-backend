@@ -499,16 +499,15 @@ paths:
     post:
       tags:
         - Evaluate rules
-      summary: Evaluate rule 1 live
+      summary: Evaluate rule 1
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                transactionIds:
-                  - 04167762-3c8c-42cb-90a0-6c4c77c93422
-                  - 062972c6-64a9-4519-86f9-e93899c033b9
+              example: 
+                ruleIds: []
+                transactionIds: []
       responses:
         '200':
           description: Successful response
@@ -544,7 +543,9 @@ paths:
           application/json:
             schema:
               type: object
-              example: "// {\r\n//     \"ruleIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"],\r\n//     \"transactionIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"]\r\n// }\r\n\r\n{\r\n    \"ruleIds\": [],\r\n    \"transactionIds\": []\r\n}"
+              example: 
+                ruleIds: []
+                transactionIds: []
       responses:
         '200':
           description: Successful response
@@ -554,15 +555,15 @@ paths:
     post:
       tags:
         - Evaluate rules
-      summary: Evaluate rule 2.2 live
+      summary: Evaluate rule 2.2
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              example:
-                transactionIds:
-                  - 04167762-3c8c-42cb-90a0-6c4c77c93422
+              example: 
+                ruleIds: []
+                transactionIds: []
       responses:
         '200':
           description: Successful response
@@ -578,7 +579,9 @@ paths:
           application/json:
             schema:
               type: object
-              example: "// {\r\n//     \"ruleIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"],\r\n//     \"transactionIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"]\r\n// }\r\n\r\n{\r\n    \"ruleIds\": [],\r\n    \"transactionIds\": []\r\n}"
+              example:
+                ruleIds: []
+                transactionIds: []
       responses:
         '200':
           description: Successful response
@@ -594,7 +597,9 @@ paths:
           application/json:
             schema:
               type: object
-              example: "// {\r\n//     \"ruleIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"],\r\n//     \"transactionIds\":[\"04167762-3c8c-42cb-90a0-6c4c77c93422\",\"062972c6-64a9-4519-86f9-e93899c033b9\",\"03ee5bda-293a-4c64-a02d-c2da7ffee1f7\",\"0cf858f6-22a7-4032-ac18-13588285ed3d\"]\r\n// }\r\n\r\n{\r\n    \"ruleIds\": [],\r\n    \"transactionIds\": []\r\n}"
+              example: 
+                ruleIds: []
+                transactionIds: []
       responses:
         '200':
           description: Successful response
